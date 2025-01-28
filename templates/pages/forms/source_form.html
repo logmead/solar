@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block page_title %}
+    Поиск
+{% endblock %}
+
+{% block page_css %}
+    <link rel="stylesheet" href="{% static 'form.css' %}">
+    
+{% endblock %}
+
+{% block page %}
+
+<div class="page-title">
+    Поиск данных
+</div>
+
+
+
+
+    
+    <div id="other-forms">
+        
+            <form id="search-form" method="post" data-url="{% url 'variables' %}">
+                <div class="split-form">
+                    <div>
+                        <div class="field-label">Временной интервал</div>
+                        <div>
+                            <div>{{ form.ts_start.label }}</div>
+                            <div>{{ form.ts_start }}</div>
+                        </div>
+                        <div>
+                            <div>{{ form.ts_end.label }}</div>
+                            <div>{{ form.ts_end }}</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div  class="field-label">{{ form.sources.label }}</div>
+                        <div>{{ form.sources }}</div>
+                        
+                    </div>
+                </div>
+                {% csrf_token %}
+
+                
+                
+                
+        
+                <button class="btn" type="button" onclick="getVariables();">Показать переменные</button>
+            </form>
+        
+        
+        
+        <div id="variables-place">
+        
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+{% endblock %}
+
+
+{% block page_js %}
+
+<script src="https://unpkg.com/htmx.org@2.0.3" integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq" crossorigin="anonymous"></script>
+
+<script src="{% static 'search.js' %}"></script>
+
+<script>
+    // $('.dateandtime').dateAndTime();
+</script>
+
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+    Метаданные {{ exp.technical_title }}
+{% endblock %} 
+
+{% block page %}
+
+<div class="page-title">
+    Метаданные {{ exp.technical_title }}
+</div>
+
+<div class="page-title">Глобальные атрибуты</div>
+
+<table>
+    <tr>
+        <th>Key</th>
+        <th>Value</th>
+    </tr>
+    {% for attr in exp_attrs %}
+        <tr>
+            <td>{{ attr.title }}</td>
+            <td>{{ attr.get_value }}</td>
+
+        </tr>
+    {% endfor %}
+</table>
+
+<div class="page-title">Список переменных</div>
+
+<table class="bright-table">
+    {% for var in vars %}
+    <tr  onclick="changeVisibilityClass('sub-rows-{{ var.var_instance.id }}');"><th colspan="10">{{ var.var_instance.name }}</th></tr>
+        {% for attr in var.attrs %}
+        <tr class="sub-rows-{{ var.var_instance.id }}" hidden>
+            <td>{{ attr.title }}</td>
+            <td>{{ attr.get_value }}</td>
+        </tr>
+        {% endfor %}
+    {% endfor %}
+    <tr></tr>
+</table>
+
+<div></div>
+
+{% endblock %}

@@ -1,0 +1,172 @@
+
+@font-face {
+    font-family: "Inter";
+    src: url("./font/Inter.ttf"), format("ttf");
+}
+
+@font-face {
+    font-family: "Inter-Italic";
+    src: url("./font/Inter-Italic.ttf"), format("ttf");
+}
+
+:root {
+    --accent-color: #00baf3;
+    --border-color: #daf3ff;
+    --page-width: 1600px;
+    --dark-color: rgb(0, 21, 41);
+}
+
+
+html {
+    height: 100%;
+}
+
+* body {
+    font-family: "Inter", sans-serif;
+    font-size: 1rem;
+    margin: 0;
+    padding: 0;
+    color: var(--dark-color);
+    height: 100%;
+    min-height: 100%;
+}
+
+a {
+
+
+    text-decoration: none;
+    color: var(--dark-color);
+    
+}
+
+a:hover {
+    color: var(--accent-color);
+    cursor: pointer;
+}
+
+.flex-body {
+    height: 100%;
+    min-height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    max-width: 1600px;
+    margin: auto;
+}
+
+.page-container {
+    flex: 1;
+    padding: 0 1rem;
+    
+}
+
+.page-footer {
+    max-width: 1600px;
+    min-width: 500px;
+    padding: 0.5rem;
+    background-color: var(--border-color);
+    text-align: center;
+}
+
+.header {
+    padding: 0.5rem 0;
+    margin-bottom: 2rem;
+}
+
+.title-smaller {
+    font-size: 1.3rem;
+    font-weight: 400;
+    font-family: "Inter-Italic", sans-serif;
+    padding: 0.3rem;
+    background-color: var(--accent-color);
+}
+
+.title-large {
+    font-size: 2.5rem;
+    margin: 1.5rem 0;
+    font-weight: 500;
+}
+
+
+.page-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    padding: 1rem 0 ;
+}
+
+.page-block {
+    padding: 1.5rem;
+}
+
+
+.btn {
+    margin: 1rem 0;
+    padding: 0.7rem 1rem;
+    border: 2px solid var(--accent-color);
+    border-radius: 5px;
+    max-width: fit-content;
+    background-color: white;
+    font-size: 1.1rem;
+}
+
+
+.btn:hover {
+    transition: all 0.5s;
+    cursor: pointer;
+    background-color: var(--border-color);
+    
+}
+
+.psd-btn {
+    margin: 1rem 0;
+    padding: 1rem 1rem;
+    border: 2px solid var(--accent-color);
+    border-radius: 5px;
+    max-width: fit-content;
+}
+
+.psd-btn:hover {
+    transition: all 0.5s;
+    background-color: var(--border-color);
+    padding: 1rem 1.5rem;
+    box-shadow: 0 0  5px var(--border-color) ;
+}
+
+a .psd-btn:hover {
+    color: black;
+    font-weight: 500;
+    display: block;
+    
+}
+
+.smaller_page {
+    max-width: 1000px;
+    margin: auto;
+}
+
+.central {
+    max-width: 500px;
+    
+}
+
+.text-div {
+    font-size: 1.1rem;
+
+    margin: 3rem 0;
+    line-height: 1.5rem;
+}
+
+.text-div a {
+    color: var(--accent-color);
+}
+
+.tech-table th {
+    text-align: left;
+    
+}
+
+.tech-table,
+.tech-table tr,
+.tech-table td {
+    border: 2px solid black;
+}

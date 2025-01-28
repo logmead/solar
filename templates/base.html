@@ -1,0 +1,42 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-widthm initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <link rel="stylesheet" href="{% static 'general.css' %}">
+    <link rel="stylesheet" href="{% static 'tables.css' %}">
+    <link rel="stylesheet" href="{% static 'plots.css' %}">
+    {% block page_css %} {% endblock %}
+
+    <title>{% block page_title %} {% endblock %}</title>
+</head>
+<body>
+    <div class="flex-body">
+        <div class="page-container {% if main_page %} smaller_page {% endif %}">
+
+            <div class="header">
+                <a href="{% url 'main_page' %}"><div class="title-large">Солнечная система</div></a>
+                <div class="title-smaller">Центр данных Луны и дальнего космоса</div>
+                
+            </div>
+            {% block page %}
+            
+            {% endblock %}
+
+        </div>
+        <div class="page-footer  {% if main_page %} smaller_page {% endif %}">
+            Институт космических исследований РАН, 2024
+        </div>
+    </div>
+
+    {% block page_js %}
+
+    {% endblock %}
+
+    <script src="{% static 'general.js' %}"></script>
+</body>
+</html>

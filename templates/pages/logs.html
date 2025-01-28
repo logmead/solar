@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+    Логирование
+{% endblock %}
+
+{% block page %}
+
+<div class="page-title">
+    Логи ({{ logs.count }})
+</div>
+
+
+
+<table>
+    <tr>
+        <th>timestamp</th>
+        
+        <th>Message</th>
+        
+    </tr>
+    {% for log in logs %}
+        <tr>
+            <td>{{ log.timestamp|date:"H:i:s  d.m.y" }}</td>
+            
+            <td>{% if log.action %}
+                    [<span {% if log.color %}style="color:{{ log.color }};"{% endif %}>{{ log.action }}</span>]&emsp;
+                {% endif%}{{ log.message }}</td>
+            
+
+
+        </tr>
+        
+
+    {% endfor %}
+</table>
+
+{% endblock %}

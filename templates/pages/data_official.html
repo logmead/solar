@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+    Загруженные данные
+{% endblock %}
+
+{% block page %}
+
+<div class="page-title">
+    Загруженные данные
+</div>
+
+
+
+<table>
+    <tr>
+        <th>id</th>
+        <th>Описание</th>
+        <th>Временной интервал</th>
+        <th>Количество записей</th>
+        <!-- <th>Количество файлов</th> -->
+        <th>Файловая директория</th>
+        
+        <th>Загружено</th>
+        <th></th>
+        
+    </tr>
+    {% for model in models %}
+        <tr>
+            <td>{{ model.title }}</td>
+            
+            <td>{{ model.description }}</td>
+            <td>{{ model.time_delta }}</td>
+            <td>{{ model.objects_count }}</td>
+            <!-- <td>{{ model.file_count }}</td> -->
+            <td>{{ model.file_path }}</td>
+            
+            <td>{{ model.created }}</td>
+            <td class="clickable"><a target="_blank" href="{% url 'data_tech' model.experiment %}">.cdf metadata</a></td>
+
+        </tr>
+        <tr >
+            <th colspan="100" class="clickable" onclick="changeVisibilityClass('sub-rows-{{ model.id }}');">Переменные</th>
+            
+        </tr>
+        <tr class="sub-rows-{{ model.id }}" hidden>
+            <th>id</th>
+            <th colspan="2" >Описание</th>
+            <th>Единицы измерения</th>
+            <th>Зависит от</th>
+            <th>Размерность</th>
+            <th>Для построения?</th>
+        </tr>
+        {% for var in model.vars %}
+            <tr class="sub-rows-{{ model.id }}" hidden>
+                <td>{{ var.name }}</td>
+                <td colspan="2">{{ var.description }}</td>
+                <td>{{ var.units }}</td>
+                
+                <td>{{ var.depends_on }}</td>
+                <td>{{ var.multidim }}</td>
+                <td>{{ var.data_type }}</td>
+            </tr>
+        {% endfor %}
+        <tr><th colspan="100">&nbsp;</th></tr>
+
+    {% endfor %}
+</table>
+
+{% endblock %}

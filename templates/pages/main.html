@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+    Солнечная система - ЦДЛиДК
+{% endblock %}
+
+{% block page %}
+
+    <section class="central">
+
+        <div class="text-div">
+            Система оперативной загрузки и визуализации результатов космических миссий 
+            в области исследований Солнечной системы, основанная на использовании 
+            стандартов формата данных <a href="https://cdf.gsfc.nasa.gov">CDF</a>.
+        </div>
+        
+        <div>
+            <a href="{% url 'data' %}">
+                <div class="psd-btn">
+                    Доступные данные >
+                </div>
+            </a>
+            <a href="{% url 'search' %}">
+                <div class="psd-btn">
+                    Поиск по данным >
+                </div>
+            </a>
+            <a href="{% url 'system_data' %}">
+                <div class="psd-btn">
+                    Техническая информация >
+                </div>
+            </a>
+
+        
+        
+        </div>
+
+    </section>
+
+    
+
+
+{% endblock %}
