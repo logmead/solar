@@ -15,7 +15,7 @@ Has views to display info about created models and uploaded data, as well as too
 ## Setup
 
 ### Database
-Project uses PostgreSQL database, so postgresql cluster is required, as well as psycopg3 installation.
+Project uses PostgreSQL database, so postgresql cluster is required, as well as __psycopg3__ installation.
 
 ### Python dependecies
 ```
