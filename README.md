@@ -7,10 +7,10 @@ Project contains 3 apps:
 Manages data uploads from CDf files to the db, while structuring the data in dynamic models. This app contains models that keep track of dynamic ones.
    
    - data_cdf<br>
-Contains said dynamicly created models and corresponding migrations.
+Contains said dynamically created models and corresponding migrations.
 
    - pages<br>
-Has views to display info about created models and uploaded data, as well as tools to plot the data. 
+Has views to display info about created models and uploaded data, as well as views that plot the data. 
 
 ## Setup
 
