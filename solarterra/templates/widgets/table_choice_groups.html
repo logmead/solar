@@ -1,0 +1,23 @@
+
+{% with id=widget.attrs.id %}
+<table {% if id %} id="{{ id }}" {% endif %}{% if widget.attrs.class %} class="{{ widget.attrs.class }}"{% endif %}>
+
+    {% for group, options, index in widget.optgroups %}
+        {% if group %}
+        <tr><th colspan="2">{{ group.0 }}</th><th colspan="1">Кол-во записей</th></tr>
+        {% endif %}
+
+        {% for option in options %}
+            <tr>
+                {% with widget=option %}
+                <td>{% include "django/forms/widgets/input.html" %}</td>
+                <td><label for="{{ widget.attrs.id }}">{{ widget.label.0 }}</label></td>
+                <td>{{ widget.label.1 }}</td>
+                {% endwith %}
+            </tr>
+        {% endfor %}
+
+
+    {% endfor %}
+</table>
+{% endwith %}

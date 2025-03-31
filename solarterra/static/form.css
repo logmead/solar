@@ -1,0 +1,18 @@
+
+.forms-container {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+}
+
+.split-form {
+    display: flex;
+    gap: 3rem;
+    margin: 1rem 0;
+}
+
+.field-label {
+    font-weight: 500;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+    Технические данные
+{% endblock %}
+
+{% block page %}
+
+<div class="page-title">
+    О проекте
+</div>
+
+<table class="tech-table">
+    <tr>
+        <th >Версия БД:</th>
+        <td>{{ db_version }}</td>
+    </tr>
+    <tr>
+        <th >Версия СПО:</th>
+        <td>{{ version }}</td>
+    </tr>
+    <tr>
+        <th>Проектная директория:</th>
+        <td>{{ path }}</td>
+    </tr>
+    <tr><td colspan="2"><a href="{% url 'logs' %}" target="_blank">Посмотреть логи</a></td></tr>
+</table>
+
+
+
+
+{% endblock %}

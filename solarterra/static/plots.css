@@ -1,0 +1,20 @@
+
+.page-flex {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+
+.central_page {
+    flex-grow: 1;
+    padding: 1rem;
+}
+
+label:hover {
+    cursor: pointer;
+}
+
+.no_data {
+    padding: 3rem 0;
+}

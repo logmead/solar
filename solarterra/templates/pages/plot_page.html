@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block page_title %}
+    Построение
+{% endblock %}
+
+{% block page_css %}
+    
+    
+{% endblock %}
+
+{% block page %}
+
+<div>
+    
+    
+    <div class="page-flex">
+
+        <div class="prev">
+            {% include "pages/forms/vars_form.html"  with  var_form=prev_form.form  var_form_id=prev_form.id  %}
+        </div>
+    
+        <div class="central_page">
+            <div><b>Временной интервал</b>: {{ ts_tuple.0|date:'d.m.Y H:i:s' }} - {{ ts_tuple.1|date:'d.m.Y H:i:s' }}</div>
+            <div><b>Размер бина</b>: {{ plot_params.bin_size_dt }} (HH:MM:SS) </div>
+        </div>
+    
+        <div class="next">
+            {% include "pages/forms/vars_form.html"  with  var_form=next_form.form  var_form_id=next_form.id  %}
+        </div>
+
+    </div>
+
+
+    <div class="">
+        {% for item in complete_list %}
+
+        <div>
+            <div><b>Переменная</b>: &ensp; {{ item.instance.get_description }}</div>
+            <div><b>Набор данных</b>: &ensp; {{ item.instance.experiment.get_description }}</div>
+        </div>
+        
+        {% with plot=item.plot %}
+            {% if plot %}
+                {{ plot|safe }}
+            {% else %}
+                <div class="no_data">Нет значимых данных за выбранный период</div>
+            {% endif %}
+        {% endwith %}
+
+        {% endfor %}
+    </div>
+
+
+
+</div>
+
+{% endblock %}
+
+{% block page_js %}
+
+{% endblock %}

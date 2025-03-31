@@ -1,0 +1,47 @@
+.bright-table,
+.bright-table th,
+.bright-table td,
+.bright-table tr {
+    border: 2px solid var(--accent-color);
+    border-collapse: collapse;
+}
+
+.bright-table th:hover {
+    cursor: pointer;
+}
+
+
+
+table, tr, td {
+    border: 3px solid var(--border-color);
+    border-collapse: collapse;
+}
+
+table {
+    /* table-layout: fixed; */
+    width: 100%;
+    margin-bottom: 5rem;
+}
+
+th {
+    background-color: var(--border-color);
+    
+}
+
+td, th, tr {
+    padding: 0.5rem 1rem;
+}
+
+
+
+.clickable,
+.clickable th {
+    font-weight: normal;
+    background-color: white;
+}
+
+.clickable:hover,
+.clickable:hover th {
+    cursor: pointer;
+}
+

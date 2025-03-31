@@ -1,0 +1,19 @@
+
+{% if var_form_id %}{% else %}<div class="field-label">Выбрать переменные: </div>{% endif %}
+
+<form id="vars-form-{{ var_form_id }}" target="_blank" method="post" action="{% url 'plot' %}">
+    
+    <div class="vars-container" {% if var_form_id %} hidden {% endif %}>
+        {% csrf_token %}
+        {{ var_form.variables }}
+        {{ var_form.ts_start }}
+        {{ var_form.ts_end }}
+    </div>
+    {% if var_form_id %}
+        <button type="submit" class="btn">
+            {% if 'prev' in var_form_id %} Предыдущий интервал {% else %} Следующий интервал {% endif %}
+        </button>
+    {% else %}
+        <button type="submit" class="btn">Построить</button>
+    {% endif %}
+</form>
