@@ -25,5 +25,3 @@ get_random_secret_key()
 2. ALLOWED_HOSTS - list of strings with allowed hostnames
 
 3. DB_* - Database connection details
-
-
