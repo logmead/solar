@@ -26,4 +26,55 @@ get_random_secret_key()
 
 3. DB_* - Database connection details
 
-!LEMON FOREVER!
+### Work with CDF files
+
+- для работы с СДФ файлами на питоне исп-ся модуль spacepy.pycdf:
+```bash
+import spacepy
+```
+
+- посмотреть документацию класса CDF, Var:
+```python
+pycdf.CDF.__dict__['__doc__']
+pycdf.Var.__dict__['__doc__']
+```
+
+- чтобы открыть CDF файл (экземпляр CDF):
+```python
+cdf = pycdf.CDF("MyFile.cdf")
+```
+
+- CDF класс имеет список глобальных аттрибутов (словарь):
+```python
+cdf.attrs
+```
+
+- посмотреть один аттрибут: 
+```python
+cdf.attrs[<attrname>]
+```
+
+- CDF класс представляет из себя аналог словаря, ключами являются названия переменных файла. Чтобы увидеть названия:
+```python
+cdf.keys()
+```
+
+- чтобы увидеть одну переменную (экземпляр Var):
+```python
+cdf[<key>]
+```
+
+- чтобы увидеть все свойства переменной:
+```python
+cdf[<key>].attrs
+```
+
+- чтобы увидеть содержимое переменной (список, похожий на numpy array):
+```python
+cdf[<key>][...]
+```
+
+Полезные ссылки по CDF:
+https://spdf.gsfc.nasa.gov/pub/software/cdf/doc/cdf390/cdf390ug.pdf - CDF User's Guide
+https://spacepy.github.io/pycdf.html - Python interface to CDF files
+
