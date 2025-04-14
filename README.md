@@ -77,4 +77,3 @@ cdf[<key>][...]
 Полезные ссылки по CDF:<br>
 https://spdf.gsfc.nasa.gov/pub/software/cdf/doc/cdf390/cdf390ug.pdf - CDF User's Guide<br>
 https://spacepy.github.io/pycdf.html - Python interface to CDF files
-
