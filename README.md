@@ -28,7 +28,7 @@ get_random_secret_key()
 
 ### Work with CDF files
 
-- для работы с СДФ файлами на питоне исп-ся модуль spacepy.pycdf:
+- для работы с CDF файлами используется модуль spacepy.pycdf:
 ```bash
 import spacepy
 ```
@@ -74,7 +74,7 @@ cdf[<key>].attrs
 cdf[<key>][...]
 ```
 
-Полезные ссылки по CDF:
-https://spdf.gsfc.nasa.gov/pub/software/cdf/doc/cdf390/cdf390ug.pdf - CDF User's Guide
+Полезные ссылки по CDF:<br>
+https://spdf.gsfc.nasa.gov/pub/software/cdf/doc/cdf390/cdf390ug.pdf - CDF User's Guide<br>
 https://spacepy.github.io/pycdf.html - Python interface to CDF files
 
