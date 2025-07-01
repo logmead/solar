@@ -9,12 +9,12 @@ from solarterra.utils import bigint_ts_resolver
 
 # Create your models here.
 
-class ExperimentManager(GetManager):
+class DatasetManager(GetManager):
     
     def form_choices(self):
         return [(exp.id, exp.get_description) for exp in self.all() ]
 
-class Experiment(models.Model):
+class Dataset(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
@@ -35,7 +35,7 @@ class Experiment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
-    objects = ExperimentManager()
+    objects = DatasetManager()
 
     def __str__(self):
         return self.technical_title
@@ -69,12 +69,12 @@ class Experiment(models.Model):
     confirmed title long (human-readable)
     """
 
-class ExperimentAttribute(models.Model):
+class DatasetAttribute(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     title = models.CharField(max_length=100)
-    experiment = models.ForeignKey("Experiment", on_delete=models.CASCADE, related_name="attributes")
+    experiment = models.ForeignKey("Dataset", on_delete=models.CASCADE, related_name="attributes")
 
     unique_values = models.PositiveIntegerField()
     unique_for_file = models.BooleanField()
@@ -95,12 +95,12 @@ class ExperimentAttribute(models.Model):
     number of values 
     """
 
-class ExperimentAttributeValue(models.Model):
+class DatasetAttributeValue(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     value = models.TextField(blank=True, null=True)
-    attribute = models.ForeignKey("ExperimentAttribute", on_delete=models.CASCADE, related_name="values") 
+    attribute = models.ForeignKey("DatasetAttribute", on_delete=models.CASCADE, related_name="values") 
 
     objects = GetManager()
 
@@ -125,7 +125,7 @@ class Variable(models.Model):
     # what is the var_type attribute
     is_data = models.BooleanField(default=False)
     
-    experiment = models.ForeignKey("Experiment", on_delete=models.CASCADE, related_name="variables")
+    experiment = models.ForeignKey("Dataset", on_delete=models.CASCADE, related_name="variables")
     
     objects = GetManager()
     """
