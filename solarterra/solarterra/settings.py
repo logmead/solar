@@ -42,7 +42,7 @@ DEBUG = True
 
 LOG_FILE = os.path.abspath(os.path.join(BASE_DIR, '..', 'solarterra_submodules/logs/logfile'))
 
-ALLOWED_HOSTS = list(config['ALLOWED_HOSTS'])
+ALLOWED_HOSTS = ['localhost','127.0.0.1']
 
 
 # Application definition
@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'data_cdf',
     'load_cdf',
     'pages',
+    "django_extensions", #Joe's addition for debugging purposes, remove at merge/install django-extentions with pip
 ]
 
 MIDDLEWARE = [
