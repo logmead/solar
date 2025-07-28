@@ -74,7 +74,7 @@ class DatasetAttribute(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     title = models.CharField(max_length=100)
-    experiment = models.ForeignKey(
+    dataset = models.ForeignKey(
         "Dataset", on_delete=models.CASCADE, related_name="attributes")
 
     unique_values = models.PositiveIntegerField()
@@ -128,12 +128,12 @@ class Variable(models.Model):
     # what is the var_type attribute
     is_data = models.BooleanField(default=False)
 
-    experiment = models.ForeignKey(
+    dataset = models.ForeignKey(
         "Dataset", on_delete=models.CASCADE, related_name="variables")
 
     objects = GetManager()
     """
-    experiment fk
+    dataset fk
     variable title
     number of files it is in 
     """
@@ -157,17 +157,17 @@ class Variable(models.Model):
         depends = VariableAttributeValue.objects\
             .filter(attribute__variable=self, attribute__title__icontains='depend')\
             .values_list('value', flat=True)
-        return self.experiment.variables.filter(name__in=list(depends))
+        return self.dataset.variables.filter(name__in=list(depends))
 
     def dependency_nrv_var(self):
         potentials = self.dependency_vars().filter(non_record_variant=True)
         if potentials.count() == 1:
             return potentials.first()
         else:
-            print("There isn`t a single NRV dependency.")
+            print("There is no single NRV dependency.")
 
     def nrv_in_order(self):
-        return self.nrv_values.order_by('order')
+        return self.nrv_values.order_by('order') #order is a part of VariableDataNRV
 
     def nrv_value_string(self):
         return f"[{' '.join(self.nrv_in_order().values_list('value', flat=True))}]"
@@ -227,10 +227,10 @@ class VariableDataNRV(models.Model):
     variable = models.ForeignKey(
         "Variable", on_delete=models.CASCADE, related_name="nrv_values")
 
-    objects = GetManager()
+    objects = GetManager() 
 
     class Meta:
-        unique_together = ('variable', 'order',)
+        unique_together = ('variable', 'order',)  
 
 
 class VariableAttribute(models.Model):
@@ -270,9 +270,9 @@ class DynamicModel(models.Model):
     # string reference to existing MODEL
     model_name = models.CharField(max_length=100)
 
-    # actual Experiment it is made for
-    experiment_instance = models.OneToOneField(
-        "Experiment", on_delete=models.CASCADE, related_name="dynamic")
+    # actual Dataset it is made for
+    dataset_instance = models.OneToOneField(
+        "Dataset", on_delete=models.CASCADE, related_name="dynamic")
     model_file_path = models.TextField()
 
     objects = GetManager()
