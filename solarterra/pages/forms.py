@@ -1,7 +1,8 @@
+from django.core.exceptions import ValidationError
 from data_cdf.models import *
 from load_cdf.models import Experiment
 from django import forms
-from pages.widgets import DateTimePicker, CheckboxTableGroups
+from pages.widgets import DateTimeWidget, DateTimePicker, CheckboxTableGroups
 import datetime as dt
 from django.db.models import Q
 
@@ -12,22 +13,31 @@ class SourceForm(forms.Form):
     sources = forms.MultipleChoiceField(
         label="Загруженные наборы данных",
         choices=Experiment.objects.form_choices(),
-        widget=forms.CheckboxSelectMultiple()
+        widget=forms.CheckboxSelectMultiple(),
+        required=True,
     )
 
 
     ts_start = forms.DateTimeField(
         label="От",
-        required=False,
-        widget=forms.DateTimeInput()
+        required=True,
+        widget=DateTimeWidget(attrs={'id' : "dtw_start"})
     )
 
     ts_end = forms.DateTimeField(
         label="До",
-        required=False,
-        widget=forms.DateTimeInput()
+        required=True,
+        widget=DateTimeWidget(attrs={'id' : "dtw_end"})
     )
-    
+
+    def clean(self):
+        cleaned_data = super().clean()
+        ts_start = cleaned_data.get("ts_start")
+        ts_end = cleaned_data.get("ts_end")
+
+        if ts_start >= ts_end:
+            raise ValidationError("Start time should be before end time.")
+
 
 class VariablesForm(forms.Form):
 
