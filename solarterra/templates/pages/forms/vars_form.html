@@ -1,7 +1,7 @@
 
 {% if var_form_id %}{% else %}<div class="field-label">Выбрать переменные: </div>{% endif %}
 
-<form id="vars-form-{{ var_form_id }}" target="_blank" method="post" action="{% url 'plot' %}">
+<form id="vars-form-{{ var_form_id }}"  method="post" action="{% url 'plot' %}">
     
     <div class="vars-container" {% if var_form_id %} hidden {% endif %}>
         {% csrf_token %}
