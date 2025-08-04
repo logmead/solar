@@ -7,7 +7,65 @@ from django.conf import settings
 from django.db.models import Max, Min
 from solarterra.utils import bigint_ts_resolver
 
-# Create your models here.
+# ------------filesystem work---------------------#
+
+
+class Upload(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    # ❓
+    # zip_path = models.CharField(max_length=300, blank=True, null=True)
+    # zip_md5 = models.CharField(max_length=100, blank=True, null=True)
+
+    #  goes after the dataset tag in zipname (for WIND_WIND_OR_PRE_v01_u1 it would be 1)
+    human_tag = models.CharField(max_length=100, blank=True, null=True)
+
+    result_status = models.PositiveSmallIntegerField(
+        default=0,
+        choices=[
+            (0, "Success"),
+            (1, "Collisions in file names"),
+            # 📌 more to be added
+        ])
+
+    # how many files were found, provided by processing script
+    file_count = models.PositiveIntegerField(blank=True, null=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+    # modified = models.DateTimeField(auto_now=True) # not needed if we are keeping failed uploads
+
+    dataset = models.ForeignKey(
+        "Dataset", on_delete=models.CASCADE, related_name="uploads")
+
+    objects = GetManager()
+
+    def __str__(self):
+        # id doesn't matter and human tag is not unique
+        return str(self.created) + "_" + self.human_tag
+
+
+class CDFFileStored(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    # the name of the file
+    full_path = models.CharField(max_length=300)
+
+    # the upload it belongs to
+    upload = models.ForeignKey(
+        "Upload", on_delete=models.CASCADE, related_name="CDFfiles")
+
+    objects = GetManager()
+
+    def __str__(self):
+        return self.file_name
+
+
+# ------------datasets---------------------#
+'''
+    Dataset is a collection of CDF files that share the same 
+    match file. It is identified by a DATASET_TAG
+    which is also the full path to the directory where the files are stored.
+'''
 
 
 class DatasetManager(GetManager):
@@ -19,19 +77,23 @@ class DatasetManager(GetManager):
 class Dataset(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # the tag is the name of the directory where the files are stored + the name of the match file
+    # e.g. WIND_WIND_OR_PRE_v01
+    dataset_tag = models.CharField(max_length=100, unique=True)
 
-    # what directory was submitted
-    dir_path = models.CharField(max_length=300)
+    # global attributes from match file - tag parts
+    MISSION = models.CharField(max_length=100)
+    SOURCE_NAME = models.CharField(max_length=100)
+    DATA_TYPE = models.CharField(max_length=100)
+    INSTRUMENT = models.CharField(max_length=100)
+    DATASET_VERSION = models.CharField(max_length=100)
 
-    # last part of dir_path
-    technical_title = models.CharField(max_length=50, blank=True, null=True)
-
-    # how many files were found
-    file_count = models.PositiveIntegerField(blank=True, null=True)
-
-    # time limits
-    first_timestamp = models.PositiveBigIntegerField(blank=True, null=True)
-    last_timestamp = models.PositiveBigIntegerField(blank=True, null=True)
+    # global attributes from match file - dataset description
+    TEXT_DESCRIPTION = models.TextField(blank=True, null=True)
+    LOGICAL_SOURCE = models.CharField(max_length=200, blank=True, null=True)
+    LOGICAL_DESCRIPTION = models.TextField(blank=True, null=True)
+    PI_NAME = models.CharField(max_length=200, blank=True, null=True)
+    PI_AFFILIATION = models.CharField(max_length=200, blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -39,7 +101,10 @@ class Dataset(models.Model):
     objects = DatasetManager()
 
     def __str__(self):
-        return self.technical_title
+        return self.dataset_tag
+
+    def get_uploads_list(self):
+        return self.uploads.all()
 
     def get_attribute_value(self, attribute_title):
         attr = self.attributes.filter(title__iexact=attribute_title).first()
@@ -48,25 +113,15 @@ class Dataset(models.Model):
         else:
             return None
 
-    def get_description(self):
+    # def get_description(self):
 
-        subs = ["project", "descriptor", "data_type"]
+    #     subs = ["project", "descriptor", "data_type"]
 
-        lsd = self.get_attribute_value('Logical_source_description')
-        if lsd is not None:
-            return lsd
-        else:
-            return ", ".join([self.get_attribute_value(sub) for sub in subs])
-
-    """
-    files dirpath (str), that was supplied
-    number of files (num), that was supplied
-    date spread (possibly two timestamps, encoded)
-    file attributes (fk)
-
-    confirmed title short (technical)
-    confirmed title long (human-readable)
-    """
+    #     lsd = self.get_attribute_value('Logical_source_description')
+    #     if lsd is not None:
+    #         return lsd
+    #     else:
+    #         return ", ".join([self.get_attribute_value(sub) for sub in subs])
 
 
 class DatasetAttribute(models.Model):
@@ -108,6 +163,11 @@ class DatasetAttributeValue(models.Model):
     objects = GetManager()
 
 # ------------demarcation to vars---------------------#
+
+
+'''
+    Variable is a single variable in dataset CDF files.
+'''
 
 
 class VariableManager(GetManager):
@@ -167,7 +227,8 @@ class Variable(models.Model):
             print("There is no single NRV dependency.")
 
     def nrv_in_order(self):
-        return self.nrv_values.order_by('order') #order is a part of VariableDataNRV
+        # order is a part of VariableDataNRV
+        return self.nrv_values.order_by('order')
 
     def nrv_value_string(self):
         return f"[{' '.join(self.nrv_in_order().values_list('value', flat=True))}]"
@@ -227,10 +288,10 @@ class VariableDataNRV(models.Model):
     variable = models.ForeignKey(
         "Variable", on_delete=models.CASCADE, related_name="nrv_values")
 
-    objects = GetManager() 
+    objects = GetManager()
 
     class Meta:
-        unique_together = ('variable', 'order',)  
+        unique_together = ('variable', 'order',)
 
 
 class VariableAttribute(models.Model):
@@ -262,6 +323,10 @@ class VariableAttributeValue(models.Model):
         "VariableAttribute", on_delete=models.CASCADE, related_name="values")
 
     objects = GetManager()
+
+# ------------demarcation to dynamic models---------------------#
+
+# TODO: describe DynamicModel and DynamicField
 
 
 class DynamicModel(models.Model):
@@ -347,6 +412,10 @@ class DynamicField(models.Model):
             return time_field.field_name
         else:
             return None
+
+# ------------demarcation to logging---------------------#
+
+# might be in need of complete reworking
 
 
 class LogEntry(models.Model):
