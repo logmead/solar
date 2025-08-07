@@ -7,24 +7,24 @@ from django.conf import settings
 from django.db.models import Max, Min
 from solarterra.utils import bigint_ts_resolver
 
-# ------------filesystem work---------------------#
+# ------------filesystem work-----------------#
 
 
 class Upload(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    # ❓
-    # zip_path = models.CharField(max_length=300, blank=True, null=True)
-    # zip_md5 = models.CharField(max_length=100, blank=True, null=True)
+    zip_path = models.CharField(max_length=300)
+    zip_md5 = models.CharField(max_length=100, blank=True, null=True)
 
     #  goes after the dataset tag in zipname (for WIND_WIND_OR_PRE_v01_u1 it would be 1)
-    human_tag = models.CharField(max_length=100, blank=True, null=True)
+    human_tag = models.CharField(max_length=200)
 
     result_status = models.PositiveSmallIntegerField(
-        default=0,
+        default=1,  # in case of sudden interruptions in code, i want to give SUCCESS status manually
         choices=[
             (0, "Success"),
-            (1, "Collisions in file names"),
+            (1, "Unexpected error"),
+            (2, "Collision in filenames")
             # 📌 more to be added
         ])
 
@@ -82,18 +82,18 @@ class Dataset(models.Model):
     dataset_tag = models.CharField(max_length=100, unique=True)
 
     # global attributes from match file - tag parts
-    MISSION = models.CharField(max_length=100)
-    SOURCE_NAME = models.CharField(max_length=100)
-    DATA_TYPE = models.CharField(max_length=100)
-    INSTRUMENT = models.CharField(max_length=100)
-    DATASET_VERSION = models.CharField(max_length=100)
+    mission = models.CharField(max_length=100)
+    source_name = models.CharField(max_length=100)
+    data_type = models.CharField(max_length=100)
+    instrument = models.CharField(max_length=100)
+    dataset_version = models.CharField(max_length=100)
 
     # global attributes from match file - dataset description
-    TEXT_DESCRIPTION = models.TextField(blank=True, null=True)
-    LOGICAL_SOURCE = models.CharField(max_length=200, blank=True, null=True)
-    LOGICAL_DESCRIPTION = models.TextField(blank=True, null=True)
-    PI_NAME = models.CharField(max_length=200, blank=True, null=True)
-    PI_AFFILIATION = models.CharField(max_length=200, blank=True, null=True)
+    text_description = models.TextField(blank=True, null=True)
+    logical_source = models.CharField(max_length=200, blank=True, null=True)
+    logical_description = models.TextField(blank=True, null=True)
+    pi_name = models.CharField(max_length=200, blank=True, null=True)
+    pi_affiliation = models.CharField(max_length=200, blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -420,27 +420,12 @@ class DynamicField(models.Model):
 
 class LogEntry(models.Model):
 
-    ACTIONS = {
-        "CREATED": "green",
-        "FOUND": "black",
-        "NOT FOUND": "black",
-        "DELETED": "red",
-        "START": "blue",
-        "PREPROCESSING": "blue",
-        "EXIT": "blue",
-        "ERROR": "red",
-    }
-
-    CODES = [
-        "WARNING",
-        "ERROR",
-        "SUCCESS",
-    ]
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     timestamp = models.DateTimeField(auto_now_add=True)
-    action = models.CharField(max_length=15, null=True, blank=True)
+    upload = models.ForeignKey(
+        "Upload", on_delete=models.CASCADE, related_name="logs", blank=True, null=True)
+    code = models.CharField(max_length=15, null=True, blank=True)
     color = models.CharField(max_length=15, null=True, blank=True)
     message = models.TextField()
     addition = models.TextField(blank=True, null=True)
@@ -448,23 +433,37 @@ class LogEntry(models.Model):
     objects = GetManager()
 
     def __str__(self):
-        return f"{self.timestamp} {self.action}"
+        return f"{self.timestamp} {self.code}"
 
     def to_file(self):
         s = f"{self.timestamp.strftime('%H:%M:%S %d.%m.%Y')}    "
-        if self.action:
-            s += f"[{self.action}]  "
+        if self.code:
+            s += f"[{self.code}]  "
         s += self.message
         return s + "\n"
 
+# upload is optional, because some logs may not be related to uploads
 
-def make_log_entry(code,  message, addition=None):
-    color = LogEntry.ACTIONS[code] if code in LogEntry.ACTIONS.keys() else None
+
+def make_log_entry(code, message, upload=None, addition=None, color='black'):
+
+    STANDARD_COLORS = {
+        "START": 'blue',
+        "EXIT": 'blue',
+        "WARNING": 'yellow',
+        "ERROR": 'red',
+        "OK": 'green',
+        "FINISHED": 'green'
+    }
+    if code in STANDARD_COLORS:
+        color = STANDARD_COLORS[code]
+
     entry = LogEntry(
-        action=code,
+        code=code,
         message=message,
         color=color,
         addition=addition,
+        upload=upload
     )
     entry.save()
     with open(settings.LOG_FILE, mode="a") as f:

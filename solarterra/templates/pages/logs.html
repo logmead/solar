@@ -23,8 +23,8 @@
         <tr>
             <td>{{ log.timestamp|date:"H:i:s  d.m.y" }}</td>
             
-            <td>{% if log.action %}
-                    [<span {% if log.color %}style="color:{{ log.color }};"{% endif %}>{{ log.action }}</span>]&emsp;
+            <td>{% if log.code %}
+                    [<span {% if log.color %}style="color:{{ log.color }};"{% endif %}>{{ log.code }}</span>]&emsp;
                 {% endif%}{{ log.message }}</td>
             
 
