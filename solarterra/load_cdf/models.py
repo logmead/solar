@@ -25,7 +25,7 @@ class Upload(models.Model):
         choices=[
             (0, "Success"),
             (1, "Unexpected error"),
-            (2, "Collision in filenames")
+            (2, "Collision in filenames"),
             (3, "Match file error")
             # 📌 more to be added
         ])
@@ -89,7 +89,7 @@ class CDFFileStored(models.Model):
 class DatasetManager(GetManager):
 
     def form_choices(self):
-        return [(exp.id, exp.get_description) for exp in self.all()]
+        return [(dts.id, dts.get_description()) for dts in self.all()]
 
 
 class Dataset(models.Model):
@@ -131,15 +131,16 @@ class Dataset(models.Model):
         else:
             return None
 
-    # def get_description(self):
-
-    #     subs = ["project", "descriptor", "data_type"]
-
-    #     lsd = self.get_attribute_value('Logical_source_description')
-    #     if lsd is not None:
-    #         return lsd
-    #     else:
-    #         return ", ".join([self.get_attribute_value(sub) for sub in subs])
+    def get_description(self):
+        # Try text_description first, then logical_description, then build from components
+        # might be better to use logical first
+        if self.text_description:
+            return self.text_description
+        elif self.logical_description:
+            return self.logical_description
+        else:
+            # Fallback to dataset_tag or build from components
+            return self.dataset_tag
 
 
 class DatasetAttribute(models.Model):
