@@ -1,3 +1,5 @@
+# ❓j: is it obsolete predcessor of evaluate.py?
+
 from django.core.management.base import BaseCommand, CommandError, CommandParser
 # from load_cdf.models import Experiment, ExperimentAttribute, ExperimentAttributeValue,\
 # Variable, VariableAttribute, VariableAttributeValue
@@ -13,6 +15,7 @@ list of file attributes
 list of variable names with a list of attributes
 
 """
+
 
 MATCH_DELIM = "%"
 

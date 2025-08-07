@@ -23,23 +23,23 @@ def get_field_values(variable, field_title):
 class Command(BaseCommand):
 
     def add_arguments(self, parser):
-        parser.add_argument("exp_title", nargs="+", type=str)
+        parser.add_argument("dset_title", nargs="+", type=str)
 
     def handle(self, *args, **options):
 
-        exp_title = options["exp_title"][0]
-        make_log_entry("START", f"Model creation script launched with parameter \"{exp_title}\"")
+        dset_title = options["dset_title"][0]
+        make_log_entry("START", f"Model creation script launched with parameter \"{dset_title}\"")
         
         exp = Experiment.objects.get_or_none(technical_title=exp_title)
         if exp is None:
-            make_log_entry("NOT FOUND", f"Metadata for Data Type \"{exp_title}\" is not found. Please, load metadata first.")
+            make_log_entry("NOT FOUND", f"Metadata for Data Type \"{dset_title}\" is not found. Please, load metadata first.")
             make_log_entry("EXIT", "Model creation script finished")
             return 0
         
-        make_log_entry("FOUND", f"Metadata for the Data Type \"{exp_title}\" is found in the database")
+        make_log_entry("FOUND", f"Metadata for the Data Type \"{dset_title}\" is found in the database")
         make_log_entry("", "Constructing model file...")
 
-        base_name = safe_str(exp.technical_title)
+        base_name = safe_str(dset.technical_title)
         model_file_name = base_name + ".py"
         
         model_file_path = os.path.join(settings.MODEL_DIR_PATH, model_file_name)
@@ -50,13 +50,13 @@ class Command(BaseCommand):
 
         dynamic_model_instance = dmi = DynamicModel(
             model_name=model_dict['name'],
-            experiment_instance=exp,
+            dataset_instance=dset,
             model_file_path=model_file_path
         )
 
         dynamic_field_list = dfl = []
 
-        variables = exp.variables.all()
+        variables = dset.variables.all()
         for variable in variables:
             
             if not variable.non_record_variant:
@@ -92,7 +92,7 @@ class Command(BaseCommand):
         with open(model_file_path, 'w') as  model_file:
             model_file.write(content)
 
-        make_log_entry("CREATED", f"Saved model file \"{model_file_path}\" for Data Type \"{exp_title}\"")
+        make_log_entry("CREATED", f"Saved model file \"{model_file_path}\" for Data Type \"{dset_title}\"")
         
         dynamic_model_instance.save()
         DynamicField.objects.bulk_create(dynamic_field_list)

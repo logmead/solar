@@ -16,21 +16,25 @@ list of variable names with a list of attributes
 
 """
 
+
 MATCH_DELIM = "%"
 
 
 class Load():
 
+    # note: i am pretty sure that "xattr" and other things starting with "x" are related to the former naming of Dataset, Experiment
+    # i am lazy to rename it
+
     def __init__(self, dir_path, file_count, dataset_technical):
 
-        self.dataset = dataset(
+        self.dataset = Dataset(
             dir_path=dir_path,
             technical_title=dataset_technical,
             file_count=file_count)
 
-        self.exp_attrs = []
+        self.dset_attrs = []
 
-        self.exp_attr_values = []
+        self.dset_attr_values = []
 
         self.vars = []
 
@@ -40,10 +44,10 @@ class Load():
 
         self.nrv_data = []
 
-    def l_exp_attr(self, m):
+    def l_dset_attr(self, m):
         return (m, m.title)
 
-    def l_exp_attr_val(self, m):
+    def l_dset_attr_val(self, m):
         return (m, f"{m.attribute.id}{MATCH_DELIM}{m.value}")
 
     def l_var(self, m):
@@ -65,68 +69,68 @@ class Load():
         else:
             return None
 
-    def len_exp_attrs(self):
-        return len(self.exp_attrs)
+    def len_dset_attrs(self):
+        return len(self.dset_attrs)
 
-    # def exp_attrs_stats(self):
-    #     for attr in self.exp_attrs:
+    # def dset_attrs_stats(self):
+    #     for attr in self.dset_attrs:
     #         print(f"attr *{attr.title}* values {attr.unique_values}")
 
     # def var_stats(self):
     #     for var in self.vars:
     #         print(f"var *{var.name}*")
 
-    def add_exp_attr_val(self, **kwargs):
+    def add_dset_attr_val(self, **kwargs):
         """
-        sending here a value and an exp_attr instance
+        sending here a value and an dset_attr instance
         looking for a saved value
         """
 
         if 'new' not in kwargs:
             match_string = f"{kwargs['xattr_instance'].id}{MATCH_DELIM}{kwargs['value']}"
             attrval = self.abstract_search(
-                match_string, self.l_exp_attr_val, self.exp_attr_values)
+                match_string, self.l_dset_attr_val, self.dset_attr_values)
             if attrval is not None:
                 return False
 
-        xattrval = datasetAttributeValue(
+        xattrval = DatasetAttributeValue(
             value=kwargs['value'],
             attribute=kwargs['xattr_instance'],
         )
 
-        self.exp_attr_values.append(xattrval)
+        self.dset_attr_values.append(xattrval)
 
         return True
 
-    def add_exp_attr(self, **kwargs):
+    def add_dset_attr(self, **kwargs):
         """
         looking for this attribute in saves:l
         """
         match_string = kwargs['title']
         attr = self.abstract_search(
-            match_string, self.l_exp_attr, self.exp_attrs)
+            match_string, self.l_dset_attr, self.dset_attrs)
 
         if attr is not None:
-            new_value = self.add_exp_attr_val(
+            new_value = self.add_dset_attr_val(
                 xattr_instance=attr, value=kwargs['value'])
             if new_value:
                 attr.unique_values += 1
             return
 
         # did not find it, add it and its values
-        xattr = datasetAttribute(
+        xattr = DatasetAttribute(
             dataset=self.dataset,
             title=kwargs['title'],
             unique_values=1,
             unique_for_file=False,
         )
 
-        self.exp_attrs.append(xattr)
-        self.add_exp_attr_val(
+        self.dset_attrs.append(xattr)
+        self.add_dset_attr_val(
             new=True, xattr_instance=xattr, value=kwargs['value'])
 
     def set_unique_attr_values(self):
-        for attr in self.exp_attrs:
+        for attr in self.dset_attrs:
             if attr.unique_values == self.dataset.file_count:
                 attr.unique_for_file = True
 
@@ -183,7 +187,7 @@ class Load():
                 var_attr_instance=attr, value=kwargs['value'])
             if new_value:
                 attr.unique_values += 1
-            return
+            return  # ugh a funny mechanic for interrupting procedure execution
 
         # did not find it, add it and its values
         vattr = VariableAttribute(
@@ -200,6 +204,7 @@ class Load():
     def add_nrv_values(self, **kwargs):
 
         # did not make a check of existing here
+        # ❓j: should we?
 
         nrv = VariableDataNRV(
             variable=kwargs['variable'],
@@ -299,10 +304,10 @@ class Command(BaseCommand):
 
         make_log_entry("", "Saving metadata...")
 
-        load.Dataset.save()
+        load.dataset.save()
         load.set_unique_attr_values()
-        DatasetAttribute.objects.bulk_create(load.exp_attrs)
-        DatasetAttributeValue.objects.bulk_create(load.exp_attr_values)
+        DatasetAttribute.objects.bulk_create(load.dset_attrs)
+        DatasetAttributeValue.objects.bulk_create(load.dset_attr_values)
         Variable.objects.bulk_create(load.vars)
         VariableAttribute.objects.bulk_create(load.var_attrs)
         VariableAttributeValue.objects.bulk_create(load.var_attr_values)
