@@ -19,6 +19,7 @@ from solarterra.utils import normalize_str
 DATA_ROOT = "/spool/data"
 MATCH_FILE_DIR = "/spool/match_files"
 UPLOAD_ZIP_DIR = "/spool/upload_zipped"
+COLLISION_LOGS_DIR = "/spool/collision_logs"
 
 
 class Command(BaseCommand):
@@ -42,28 +43,28 @@ class Command(BaseCommand):
         """
 
         zip_path = options["zip_path"][0]
+        zip_filename = os.path.basename(zip_path)
         match_file_path = options["match_file_path"][0]
+        match_file_name = os.path.basename(match_file_path)
 
         # Check if the zip file and match file exist
         # ((❗ оно вроде бы проверяется в .sh скрипте, но на всякий случай? еще можно sys.exit использовать))
         if not os.path.isfile(zip_path):
-            # log! 📃
             exit(1)
 
         if not os.path.isfile(match_file_path):
-            # log! 📃
             exit(1)
 
         # --------------FILESYSTEM WORK-----------------#
 
-        zip_md5 = subprocess.run(
-            ['md5sum', zip_path], capture_output=True, text=True, check=True).stdout.split()[0]
+        # zip_md5 = subprocess.run(
+        #     ['md5sum', zip_path], capture_output=True, text=True, check=True).stdout.split()[0]
 
         # Extract dataset tag from the filename
-        zip_filename = os.path.basename(zip_path)
-        dataset_tag, upload_human_tag = zip_filename.split(
+
+        dataset_tag, upload_ziptag = zip_filename.split(
             '_u')  # Extract part before '_u'
-        upload_human_tag = upload_human_tag.rstrip(
+        upload_ziptag = upload_ziptag.rstrip(
             '.zip')  # Remove the '.zip' extension
 
         # Check if the dataset_tag is valid
@@ -72,11 +73,16 @@ class Command(BaseCommand):
         # Create an Upload instance
         upload = Upload(
             created=dt.datetime.now(),
-            human_tag=upload_human_tag,
+            ziptag=upload_ziptag,
             zip_path=zip_path,
             # zip_md5=zip_md5
         )
         upload.save()
+
+        # Log the upload creation
+        make_log_entry(
+            "START", f"Processing upload for {zip_filename} and {match_file_name}. Target dataset is: {dataset_tag}, upload zip tag: {upload_ziptag}",
+            upload=upload)
 
         # 2️⃣ unarchive zip, check if file names already exist and put .cdf files where they belong
 
@@ -84,6 +90,23 @@ class Command(BaseCommand):
         # if they do exist, we should check cdf file names for collisions
 
         dataset_dir = os.path.join(DATA_ROOT, dataset_tag.replace('_', '/'))
+
+        # create dataset instance if it doesnt exist and link it to upload
+        dataset = Dataset.objects.get_or_none(tag=dataset_tag)
+        if not dataset:
+            # Create a new dataset if it doesn't exist
+            dataset = Dataset(dataset_tag=dataset_tag)
+            dataset.save()
+            make_log_entry(
+                "CREATED", f"Dataset instance created for {dataset_tag}",
+                upload=upload)
+        else:
+            make_log_entry(
+                "FOUND EXISTING", f"Dataset instance already exists for {dataset_tag}.",
+                upload=upload)
+        upload.dataset = dataset
+        upload.save()
+        # Log the dataset creation
 
         # Create a temporary directory to extract the zip
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -96,8 +119,12 @@ class Command(BaseCommand):
 
             if not os.path.exists(dataset_dir):
                 os.makedirs(dataset_dir)
+                make_log_entry(
+                    "CREATED", f"Created dataset directory: {dataset_dir}", upload=upload)
                 # 🚧 а если Upload валится, то удалять потом чистильщиком (будет удалять аплоаду зип и проверять пустые ли папки по тэгу датасета)
             else:
+                make_log_entry(
+                    "FOUND EXISTING", f"Dataset directory already exists: {dataset_dir}, proceeding to detecting file collisions", upload=upload)
                 # Check for file name collisions
                 collisions = []
                 for cdf_file in cdf_files:
@@ -108,16 +135,26 @@ class Command(BaseCommand):
 
                 # If collisions found, log and exit with error code 1
                 if collisions:
-                    collision_list = ", ".join(collisions)
-                    # log! 📃
+                    collision_list = "\n".join(collisions)
+                    # save collision list as txt
+                    collision_logs_txt = os.path.join(
+                        COLLISION_LOGS_DIR, f"{dataset_tag}_{upload.ziptag}_collisions.txt")
+                    with open(collision_logs_txt, 'w') as f:
+                        f.write(
+                            f"Collisions found for dataset {dataset_tag}:\n{collision_list}")
+                    make_log_entry(
+                        "ERROR", f"Collisions found for dataset {dataset_tag}. Collisions saved in the {collision_logs_txt}",
+                        upload=upload)
                     upload.result_status = 2  # collision error code
                     upload.save()
-                    # 🚧 save collision list as txt (куда его блин!!)
-                    # with open(os.path.join(MATCH_FILE_DIR, f"{dataset_tag}_collisions.txt"), 'w') as f:
-                    # f.write(f"Collisions found for dataset {dataset_tag}:\n{collision_list}\n")
-                    exit(1)
+                    make_log_entry(
+                        "EXIT", f"Exiting due to collisions in dataset {dataset_tag}. Check the collision logs at {collision_logs_txt}",
+                        upload=upload)
+                    exit(2)
 
                 # No collisions, move files to dataset directory and create CDFFileStored instances
+                make_log_entry(
+                    "OK", f"No collisions found for dataset {dataset_tag}, proceeding to storing files", upload=upload)
                 upload.file_count = len(cdf_files)
                 upload.save()
 
@@ -133,16 +170,8 @@ class Command(BaseCommand):
                         upload=upload
                     )
                     cdf_stored.save()
-                    # log! 📃
-
-        # create dataset instance if it doesnt exist and link it to upload
-        dataset = Dataset.objects.get_or_none(tag=dataset_tag)
-        if not dataset:
-            # Create a new dataset if it doesn't exist
-            dataset = Dataset(dataset_tag=dataset_tag)
-            dataset.save()
-        upload.dataset = dataset
-        upload.save()
+                make_log_entry(
+                    'OK', f"All CDF files stored successfully in {dataset_dir}", upload=upload)
 
         # open json and save to Dataset all info from GlobalAttributes
 
@@ -150,6 +179,9 @@ class Command(BaseCommand):
         try:
             with open(match_file_path, 'r') as f:
                 match_data = json.load(f)
+            make_log_entry(
+                "OK", f"Match file {match_file_name} loaded successfully", upload=upload)
+            upload.matchfile_verision = match_data['MATCHFILE_VERSION']['value']
 
             global_attrs = match_data['GlobalAttributes']
 
@@ -181,20 +213,8 @@ class Command(BaseCommand):
                     dataset.text_description = str(text_list)
 
             dataset.save()
-
-            # Loop through global attributes and save them to the dataset
-            for attr_name, attr_value in global_attrs.items():
-                dataset_attr = dataset.datasetattribute_set.get_or_create(
-                    name=normalize_str(attr_name)
-                )[0]
-
-                # Create attribute value
-                attr_value_obj = dataset.datasetattributevalue_set.create(
-                    attribute=dataset_attr,
-                    value=str(attr_value).strip(),
-                    data_type=type(attr_value).__name__
-                )
-
+            make_log_entry(
+                "OK", f"Dataset {dataset_tag} updated with global attributes from match file", upload=upload)
             # Update upload status
             upload.save()
 
@@ -204,75 +224,34 @@ class Command(BaseCommand):
 
         except json.JSONDecodeError:
 
-            # make_log_entry(
-            #     "ERROR", f"Error decoding JSON from match file: JSONDecodeError")
+            make_log_entry(
+                "ERROR", f"Error decoding JSON from match file: JSONDecodeError. Check if the file is a valid JSON.", upload=upload)
             upload.result_status = 3  # Match file error code
             upload.save()
+            make_log_entry(
+                "EXIT", f"Exiting due to error processing match file", upload=upload)
             exit(3)
 
         except Exception as e:
 
-            # make_log_entry("ERROR", f"Error processing match file: {str(e)}")
+            make_log_entry(
+                "ERROR", f"Error processing match file: {str(e)}", upload=upload)
             upload.result_status = 3  # Match file error code
             upload.save()
+            make_log_entry(
+                "EXIT", f"Exiting due to error processing match file", upload=upload)
             exit(3)
+
+        upload.result_status = 1  # Success code
+        upload.save()
+        make_log_entry(
+            "SUCCESS", f"Upload {zip_filename} processed successfully with dataset {dataset_tag}. YAY.", upload=upload)
+        make_log_entry(
+            "EXIT", f"test of new upload model ok!!!")
 
         # GUTTING CDF FILES for metadata extraction (not everything is stored in match file)
 
         # open and gut one random .cdf file
         # should be created instances of DatasetAttribute, DatasetAttributeValue,  Variable, VariableAttribute, VariableAttributeValue
 
-        # get everything from any one file
-        '''
-        random_index = random.randint(0, len(files_list))
-
-        cdf_obj = pycdf.CDF(files_list[random_index])
-
-        for xkey, xvalue in cdf_obj.attrs.items():
-            load.add_exp_attr(title=normalize_str(xkey),
-                              value=str(xvalue).strip())
-
-        for key in cdf_obj.keys():
-
-            type_class = cdf_obj[key].dtype.__name__ if hasattr(
-                cdf_obj[key].dtype, '__name__') else cdf_obj[key].dtype.__class__.__name__
-
-            var_instance = load.add_vars(
-                name=normalize_str(key),
-                data_type=type_class,
-                shape=str(cdf_obj[key].shape),
-                nrv=not (cdf_obj[key].rv())
-            )
-
-            for attr_key, attr_value in cdf_obj[key].attrs.items():
-                if attr_key == 'VAR_TYPE' and attr_value == 'data':
-                    var_instance.is_data = True
-                    # print(f"FOUND COMBO on {var_instance}")
-
-                data_type = type(attr_value).__name__
-                load.add_var_attr(variable=var_instance, title=normalize_str(
-                    attr_key), data_type=data_type, value=str(attr_value).strip())
-
-            if var_instance.non_record_variant:
-                val_array = cdf_obj[key]
-                for index, val in enumerate(val_array):
-                    load.add_nrv_values(
-                        variable=var_instance, value=val, order=index)
-
-        load.dataset.save()
-        load.set_unique_attr_values()
-        DatasetAttribute.objects.bulk_create(load.dset_attrs)
-        DatasetAttributeValue.objects.bulk_create(load.dset_attr_values)
-        Variable.objects.bulk_create(load.vars)
-        VariableAttribute.objects.bulk_create(load.var_attrs)
-        VariableAttributeValue.objects.bulk_create(load.var_attr_values)
-        VariableDataNRV.objects.bulk_create(load.nrv_data)
-        make_log_entry(
-            "CREATED", f"Metadata for Data Type \"{dataset_technical}\" saved")
-        make_log_entry("PREPROCESSING", "Evaluation stage compeleted")
-
-        del cdf_obj
-        del load
-
         # result of evaluate is filled in instances of Dataset .. VariableAttribute
-        '''

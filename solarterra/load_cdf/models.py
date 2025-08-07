@@ -18,7 +18,7 @@ class Upload(models.Model):
     zip_md5 = models.CharField(max_length=100, blank=True, null=True)
 
     #  goes after the dataset tag in zipname (for WIND_WIND_OR_PRE_v01_u1 it would be 1)
-    human_tag = models.CharField(max_length=200)
+    ziptag = models.CharField(max_length=200)
 
     result_status = models.PositiveSmallIntegerField(
         default=1,  # in case of sudden interruptions in code, i want to give SUCCESS status manually
@@ -471,7 +471,9 @@ def make_log_entry(code, message, upload=None, addition=None, color=None):
         "WARNING": 'yellow',
         "ERROR": 'red',
         "OK": 'green',
-        "SUCCESS": 'green'
+        "SUCCESS": 'green',
+        "CREATED": 'green',
+        "DELETED": 'red'
     }
 
     if not color and code in STANDARD_COLORS:
