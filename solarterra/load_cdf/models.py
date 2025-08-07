@@ -26,6 +26,7 @@ class Upload(models.Model):
             (0, "Success"),
             (1, "Unexpected error"),
             (2, "Collision in filenames")
+            (3, "Match file error")
             # 📌 more to be added
         ])
 
@@ -441,7 +442,7 @@ class LogEntry(models.Model):
 
     timestamp = models.DateTimeField(auto_now_add=True)
     upload = models.ForeignKey(
-        "Upload", on_delete=models.CASCADE, related_name="logs", blank=True, null=True)
+        "Upload", on_delete=models.SET_NULL, related_name="logs", blank=True, null=True)
     code = models.CharField(max_length=15, null=True, blank=True)
     color = models.CharField(max_length=15, null=True, blank=True)
     message = models.TextField()
@@ -459,21 +460,24 @@ class LogEntry(models.Model):
         s += self.message
         return s + "\n"
 
+
 # upload is optional, because some logs may not be related to uploads
+def make_log_entry(code, message, upload=None, addition=None, color=None):
 
-
-def make_log_entry(code, message, upload=None, addition=None, color='black'):
-
+    # note: in ideal world, color palette should be in settings.py or @ css somewhere
     STANDARD_COLORS = {
         "START": 'blue',
         "EXIT": 'blue',
         "WARNING": 'yellow',
         "ERROR": 'red',
         "OK": 'green',
-        "FINISHED": 'green'
+        "SUCCESS": 'green'
     }
-    if code in STANDARD_COLORS:
+
+    if not color and code in STANDARD_COLORS:
         color = STANDARD_COLORS[code]
+    else:
+        color = 'black'
 
     entry = LogEntry(
         code=code,
