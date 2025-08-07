@@ -6,6 +6,7 @@ from load_cdf.utils import TYPE_CONVERSION
 from django.conf import settings
 from django.db.models import Max, Min
 from solarterra.utils import bigint_ts_resolver
+import os
 
 # ------------filesystem work-----------------#
 
@@ -42,6 +43,22 @@ class Upload(models.Model):
     def __str__(self):
         # id doesn't matter and human tag is not unique
         return str(self.created) + "_" + self.human_tag
+
+    def get_cdfs(self):
+        return self.CDFfiles.all()
+
+    def get_logs(self):
+        return self.logs.all()
+
+    def ifZipAlive(self):
+        # check if the zip file is still alive
+        return os.path.exists(self.zip_path)
+
+    def clean_up(self):
+        # currently removes only the zip file
+        # might be extended to remove empty directories or somesuch
+        if self.ifZipAlive():
+            os.remove(self.zip_path)
 
 
 class CDFFileStored(models.Model):
