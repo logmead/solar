@@ -1,0 +1,7 @@
+17:53:55 09.09.2025    [START]  Processing upload for WIND_WIND_OR_PRE_v01_u2025-08-07T18-35-00.zip and WIND_WIND_OR_PRE_v01_matchfile_v0_74.json. Target dataset is: WIND_WIND_OR_PRE_v01, upload tag: 2025-08-07T18-35-00
+17:53:55 09.09.2025    [CREATED]  Dataset instance created for WIND_WIND_OR_PRE_v01
+17:53:55 09.09.2025    [FOUND EXISTING]  Dataset directory already exists: /spool/data/WIND/WIND/OR/PRE/v01, proceeding to detecting file collisions
+17:53:55 09.09.2025    [OK]  No collisions found for dataset WIND_WIND_OR_PRE_v01, proceeding to storing files
+17:53:56 09.09.2025    [OK]  All CDF files stored successfully in /spool/data/WIND/WIND/OR/PRE/v01
+17:53:56 09.09.2025    [OK]  Match file WIND_WIND_OR_PRE_v01_matchfile_v0_74.json loaded successfully
+17:53:56 09.09.2025    [OK]  Dataset WIND_WIND_OR_PRE_v01 updated with global attributes from match file

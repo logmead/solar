@@ -1,15 +1,10 @@
 from django.core.management.base import BaseCommand, CommandError, CommandParser
-# from load_cdf.models import dataset, datasetAttribute, datasetAttributeValue,\
-# Variable, VariableAttribute, VariableAttributeValue
-from load_cdf.models import Upload, CDFFileStored, Dataset, DatasetAttribute, DatasetAttributeValue, \
-    Variable, VariableAttribute, VariableAttributeValue, make_log_entry
+from load_cdf.models import Upload, CDFFileStored, Dataset, make_log_entry
 import datetime as dt
-from spacepy import pycdf
 import os
 import tempfile
 import shutil
 import zipfile
-import random
 import subprocess
 import json
 from solarterra.utils import normalize_str
@@ -19,31 +14,6 @@ from django.conf import settings
 DATA_ROOT = "/spool/data"
 MATCH_FILE_DIR = "/spool/match_files"
 UPLOAD_ZIP_DIR = "/spool/uploads_zipped"
-
-
-def get_var_field(mf_str):
-    res = mf_str.lstrip('MF_').lstrip('MFLBL_').lower()
-    print("IN PARSER", mf_str, res)
-    return res
-
-
-class MetaAggregator():
-    def __init__(self, upload, dataset):
-        # TODO: maybe i want utag and dtag instead of instances?
-        self.upload = upload
-        self.dataset = self.upload.dataset
-
-        self.dset_attrs = []
-
-        self.dset_attr_values = []
-
-        self.vars = []
-
-        self.var_attrs = []
-
-        self.var_attr_values = []
-
-        # self.nrv_data = []
 
 
 class Command(BaseCommand):
@@ -187,7 +157,6 @@ class Command(BaseCommand):
                 upload.save()
 
                 for cdf_file in cdf_files:
-                    # TODO: remake it into a bulk save
                     target_path = os.path.join(dataset_dir, cdf_file)
 
                     # Copy the file to the target directory
@@ -216,17 +185,23 @@ class Command(BaseCommand):
 
             # Mapping from JSON keys to Dataset model fields (TEXT_DESCRIPTION is missing as it requires special handling)
             # tbh maybe a list and lowercase would be better
-            dataset_fields = [
-                'MISSION', 'SOURCE_NAME', 'DATA_TYPE',
-                'INSTRUMENT', 'DATASET_VERSION', 'LOGICAL_SOURCE',
-                'LOGICAL_DESCRIPTION', 'PI_NAME', 'PI_AFFILIATION'
-            ]
+            dataset_field_mapping = {
+                'MISSION': 'mission',
+                'SOURCE_NAME': 'source_name',
+                'DATA_TYPE': 'data_type',
+                'INSTRUMENT': 'instrument',
+                'DATASET_VERSION': 'dataset_version',
+                'LOGICAL_SOURCE': 'logical_source',
+                'LOGICAL_DESCRIPTION': 'logical_description',
+                'PI_NAME': 'pi_name',
+                'PI_AFFILIATION': 'pi_affiliation'
+            }
 
             # Automatically populate dataset fields from JSON
-            for field in dataset_fields:
-                if field in global_attrs:
-                    value = global_attrs[field]['value']
-                    setattr(dataset, field.lower(), value)
+            for json_key, model_field in dataset_field_mapping.items():
+                if json_key in global_attrs:
+                    value = global_attrs[json_key]['value']
+                    setattr(dataset, model_field, value)
 
             # Handle text_description separately since it's a list in JSON
             if 'TEXT_DESCRIPTION' in global_attrs:
@@ -266,121 +241,11 @@ class Command(BaseCommand):
                 "EXIT", f"Exiting due to error processing match file", upload=upload)
             exit(3)
 
-        # -------UNTESTED BELOW THIS LINE-------#
-        mama = MetaAggregator(upload, dataset)
+        upload.result_status = 0  # Success code
+        upload.save()
+        make_log_entry(
+            "SUCCESS", f"Upload {zip_filename} processed successfully with dataset {dataset_tag}. YAY.", upload=upload)
+        make_log_entry(
+            "EXIT", f"test of new upload model ok!!!")
 
-        # Create reverse mappings for easy lookup
-        namemap_dtsattr_reversed = {}
-        for attr_name, vals in match_data['GlobalAttributes'].items():
-            if "gattribute_name" in match_data['GlobalAttributes'][attr_name]:
-                namemap_dtsattr_reversed[vals["gattribute_name"]] = attr_name
-
-        namemap_vars_reversed = {}
-        for var_name in match_data['Variables']:
-            for varattr_name, vals in match_data['Variables'][var_name].items():
-                if 'vattribute_name' in vals:
-                    namemap_vars_reversed[vals['vattribute_name']] = var_name
-
-        # dataset attribute creation
-        # - choose cdf_file instance, open it
-        cdf_obj = pycdf.CDF(cdf_stored.full_path)
-
-        for xkey, xvalue in cdf_obj.attrs.items():
-            da_instance = DatasetAttribute(
-                title=xkey,
-                dataset=dataset,
-                linked_standard_field=namemap_dtsattr_reversed.get(xkey, None),
-            )
-            dav_instance = DatasetAttributeValue(
-                value=xvalue,
-                attribute=da_instance
-            )
-            mama.dset_attrs.append(da_instance)
-            mama.dset_attr_values.append(dav_instance)
-
-        DatasetAttribute.objects.bulk_create(mama.dset_attrs)
-        DatasetAttributeValue.objects.bulk_create(mama.dset_attr_values)
-
-        # get varibales from the CDF
-        for var in cdf_obj.keys():
-            var_instance = Variable(
-                name=var,
-                dataset=dataset
-            )
-            mama.vars.append(var_instance)
-
-            for attr_title, attr_value in cdf_obj[var].attrs.items():
-                var_attr_instance = VariableAttribute(
-                    title=attr_title,
-                    variable=var_instance
-                )
-                mama.var_attrs.append(var_attr_instance)
-
-                var_attr_value_instance = VariableAttributeValue(
-                    value=attr_value,
-                    attribute=var_attr_instance
-                )
-                mama.var_attr_values.append(var_attr_value_instance)
-
-        Variable.objects.bulk_create(mama.vars)
-        VariableAttribute.objects.bulk_create(mama.var_attrs)
-        VariableAttributeValue.objects.bulk_create(mama.var_attr_values)
-
-        # updating variable, varattrs using json
-        var_qs = Variable.objects.filter(dataset=dataset)
-
-        for var_name, var_dict in match_data['Variables'].items():
-            # find instance of this variable
-            try:
-                var_instance = var_qs.get(name=var_name)
-            except Exception as e:
-                print(
-                    f"SASHAAAAA {var_name} variable does not exist in the cdf file")
-                print(e)
-                continue
-
-            for json_var_attr, var_attr_dict in var_dict.items():
-                # find Variable instance field to save data to
-                var_field = get_var_field(json_var_attr)
-                print(
-                    f"{var_instance}, {var_field}, {var_attr_dict['value']}, {type(var_attr_dict['value'])}")
-
-                if var_attr_dict['value'] is None:
-                    continue
-                # save data
-                try:
-                    setattr(var_instance, var_field,
-                            str(var_attr_dict['value']))
-                except Exception as e:
-                    print(
-                        f"OMG {var_instance}, {var_field}, {var_attr_dict['value']}, {type(var_attr_dict['value'])}, {e}")
-
-                # find the var attr instance
-                if var_attr_dict['vattribute_name'] is None:
-                    continue
-                try:
-                    var_attr_instance = var_instance.attributes.get(
-                        title=var_attr_dict['vattribute_name'])
-                except Exception as e:
-                    # print(
-                    #    f"SASHAAAAA var {var_name} {var_attr_dict['vattribute_name']} var_attr does not exist in the cdf file")
-                    # print(e)
-                    continue
-                var_attr_instance.linked_standard_field = var_field
-                var_attr_instance.multipart = var_attr_dict['value'] is list
-                var_attr_instance.save()
-
-            var_instance.save()
-            print(var_instance.datatype, var_instance.dims,
-                  var_instance.dim_sizes, var_instance.data_category)
-
-        # - create instances of dataset attribute and data attribute values, look at json at the same time
-
-        # upload.result_status = 1  # Success code
-        # upload.save()
-        # make_log_entry(
-        #     "SUCCESS", f"Upload {zip_filename} processed successfully with dataset {dataset_tag}. YAY.", upload=upload)
-        # make_log_entry(
-        #     "EXIT", f"test of new upload model ok!!!")
-
-        # GUTTING CDF FILES for metadata extraction (not everything is stored in match file)
+        exit(0)

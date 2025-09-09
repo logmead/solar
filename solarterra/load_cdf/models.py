@@ -17,8 +17,8 @@ class Upload(models.Model):
     zip_path = models.CharField(max_length=300)
     zip_md5 = models.CharField(max_length=100, blank=True, null=True)
 
-    #  goes after the dataset tag in zipname (for WIND_WIND_OR_PRE_v01_u1 it would be 1)
-    ziptag = models.CharField(max_length=200)
+    #  goes after the dataset tag in zipname (for WIND_WIND_OR_PRE_v01_u123 it would be 123)
+    u_tag = models.CharField(max_length=200)
 
     result_status = models.PositiveSmallIntegerField(
         default=1,  # in case of sudden interruptions in code, i want to give SUCCESS status manually
@@ -37,13 +37,16 @@ class Upload(models.Model):
     # modified = models.DateTimeField(auto_now=True) # not needed if we are keeping failed uploads
 
     dataset = models.ForeignKey(
-        "Dataset", on_delete=models.CASCADE, related_name="uploads")
+        "Dataset", on_delete=models.CASCADE, related_name="uploads", blank=True, null=True)
 
     objects = GetManager()
 
+    class Meta:
+        unique_together = ['u_tag', 'dataset']
+
     def __str__(self):
         # id doesn't matter and human tag is not unique
-        return str(self.created) + "_" + self.human_tag
+        return str(self.created) + "_" + self.u_tag
 
     def get_cdfs(self):
         return self.CDFfiles.all()
@@ -75,7 +78,7 @@ class CDFFileStored(models.Model):
     objects = GetManager()
 
     def __str__(self):
-        return self.file_name
+        return self.full_path
 
 
 # ------------datasets---------------------#
@@ -97,7 +100,7 @@ class Dataset(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # the tag is the name of the directory where the files are stored + the name of the match file
     # e.g. WIND_WIND_OR_PRE_v01
-    dataset_tag = models.CharField(max_length=100, unique=True)
+    tag = models.CharField(max_length=100, unique=True)
 
     # global attributes from match file - tag parts
     mission = models.CharField(max_length=100)
@@ -119,7 +122,7 @@ class Dataset(models.Model):
     objects = DatasetManager()
 
     def __str__(self):
-        return self.dataset_tag
+        return self.tag
 
     def get_uploads_list(self):
         return self.uploads.all()
@@ -140,7 +143,12 @@ class Dataset(models.Model):
             return self.logical_description
         else:
             # Fallback to dataset_tag or build from components
-            return self.dataset_tag
+            return self.tag
+
+
+class DatasetAttributeManager(GetManager):
+    def is_standartized(self, **kwargs):
+        return self.filter(**kwargs).filter(linked_standard_field__isnull=False)
 
 
 class DatasetAttribute(models.Model):
@@ -149,12 +157,15 @@ class DatasetAttribute(models.Model):
 
     title = models.CharField(max_length=100)
     dataset = models.ForeignKey(
-        "Dataset", on_delete=models.CASCADE, related_name="attributes")
+        "Dataset", on_delete=models.CASCADE, related_name="attributes", blank=True, null=True)
 
-    unique_values = models.PositiveIntegerField()
-    unique_for_file = models.BooleanField()
+    linked_standard_field = models.CharField(
+        max_length=100, blank=True, null=True)  # name of the field in Dataset model
 
-    objects = GetManager()
+    def is_standartized(self):
+        return self.linked_standard_field is not None
+
+    objects = DatasetAttributeManager()
 
     def __str__(self):
         return self.title
@@ -200,117 +211,53 @@ class Variable(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     name = models.CharField(max_length=100)
-    data_type = models.CharField(max_length=100)
-    shape = models.CharField(max_length=100)
-    non_record_variant = models.BooleanField()
 
-    # what is the var_type attribute
-    is_data = models.BooleanField(default=False)
+    # -------MFLBL fields--------
+
+    # original cdf datatype, before conversion to Django
+    # TYPE_CONVERSION table is currently in utils.py
+    # TODO: should be taken from cdaweb manual
+    datatype = models.CharField(max_length=200, null=True)
+
+    dims = models.SmallIntegerField(null=True)
+    # TODO костыль, пока у нас нет спектрограмм
+    dim_sizes = models.SmallIntegerField(null=True)
+
+    is_displayed = models.BooleanField(null=True, default=False)
+
+    # this one for future use, currently 3 values ['time', 'orbit', 'NA']
+    data_category = models.CharField(max_length=200, null=True)
+
+    # -----MF fields------
+
+    catdesc = models.CharField(max_length=200, null=True)
+    var_notes = models.CharField(max_length=200, null=True)
+    depend_0 = models.CharField(max_length=200, null=True)
+    display_type = models.CharField(max_length=200, null=True)
+    fillval = models.CharField(max_length=200, null=True)
+    output_format = models.CharField(max_length=200, null=True)
+    lablaxis = models.CharField(max_length=200, null=True)
+
+    units = models.CharField(max_length=200, null=True)
+    # char bc it depends on units
+    validmin = models.CharField(max_length=200, null=True)
+    validmax = models.CharField(max_length=200, null=True)
+    # VAR_TYPE
+    var_logic_type = models.CharField(max_length=200, null=True)
+    scaletyp = models.CharField(max_length=200, null=True)
+    scalemin = models.CharField(max_length=200, null=True)
+    scalemax = models.CharField(max_length=200, null=True)
 
     dataset = models.ForeignKey(
         "Dataset", on_delete=models.CASCADE, related_name="variables")
 
-    objects = GetManager()
-    """
-    dataset fk
-    variable title
-    number of files it is in 
-    """
+    objects = VariableManager()
 
     def __str__(self):
         return self.name
 
-    def data_dimensions(self):
-        return len(self.shape.strip('(),').split(','))
-
-    def has_depends(self):
-        depends = VariableAttributeValue.objects.filter(
-            attribute__variable=self, attribute__title__icontains='depend')
-        if depends.count() == 0:
-            return False
-        else:
-            return True
-
-    def dependency_vars(self):
-
-        depends = VariableAttributeValue.objects\
-            .filter(attribute__variable=self, attribute__title__icontains='depend')\
-            .values_list('value', flat=True)
-        return self.dataset.variables.filter(name__in=list(depends))
-
-    def dependency_nrv_var(self):
-        potentials = self.dependency_vars().filter(non_record_variant=True)
-        if potentials.count() == 1:
-            return potentials.first()
-        else:
-            print("There is no single NRV dependency.")
-
-    def nrv_in_order(self):
-        # order is a part of VariableDataNRV
-        return self.nrv_values.order_by('order')
-
-    def nrv_value_string(self):
-        return f"[{' '.join(self.nrv_in_order().values_list('value', flat=True))}]"
-
-    def is_datetime(self):
-        return True if self.data_type == 'ObjectDType' else False
-
-    def is_decimal(self):
-        return True if 'float' in self.data_type else False
-
-    def get_precision(self):
-        if self.is_decimal():
-            record = TYPE_CONVERSION[self.data_type][1]
-            return int(record['decimal_places']), int(record['max_digits'])
-        else:
-            return None
-
-    def get_attribute_value(self, attribute_title, get_type=False):
-        attr = self.attributes.filter(title__iexact=attribute_title).first()
-        if attr:
-            if get_type:
-                return attr.get_value(), attr.data_type
-            else:
-                return attr.get_value()
-        else:
-            return None
-
-    def get_description(self):
-        desc = self.get_attribute_value('catdesc')
-        if desc is not None:
-            return desc
-        else:
-            return self.get_attribute_value('fieldnam')
-
-    def get_axis_label(self):
-
-        units = self.get_attribute_value('units')
-        if units:
-            return f"{self.name}, {units}"
-        else:
-            return self.name
-
-    def is_log(self):
-        scaletype = self.get_attribute_value('scaletyp')
-        if scaletype is not None and scaletype == "log":
-            print(f"YAY {self.name} is LOG!")
-            return True
-        else:
-            return False
-
-
-class VariableDataNRV(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-    value = models.CharField(max_length=100)
-    order = models.PositiveSmallIntegerField()
-    variable = models.ForeignKey(
-        "Variable", on_delete=models.CASCADE, related_name="nrv_values")
-
-    objects = GetManager()
-
-    class Meta:
-        unique_together = ('variable', 'order',)
+    def is_data(self):
+        return var_logic_type.lower() == 'data'
 
 
 class VariableAttribute(models.Model):
@@ -318,13 +265,22 @@ class VariableAttribute(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     title = models.CharField(max_length=100)
-    data_type = models.CharField(max_length=100)
+    # can it be determined from cdf_file?
+    # do i even use it?
+    data_type = models.CharField(max_length=100, blank=True, null=True)
+
     variable = models.ForeignKey(
         "Variable", on_delete=models.CASCADE, related_name="attributes")
+    linked_standard_field = models.CharField(
+        max_length=100, blank=True, null=True)  # name of the field in Dataset model
 
-    unique_values = models.PositiveIntegerField()
+    # reflects dimensionality of a variable
+    multipart = models.BooleanField(blank=True, null=True)
 
     objects = GetManager()
+
+    def is_Standartized(self):
+        return self.linked_standard_field is not None
 
     def get_value(self):
         return self.values.first().value
@@ -356,7 +312,7 @@ class DynamicModel(models.Model):
 
     # actual Dataset it is made for
     dataset_instance = models.OneToOneField(
-        "Dataset", on_delete=models.CASCADE, related_name="dynamic")
+        "Dataset", on_delete=models.CASCADE, related_name="dynamic", blank=True, null=True)
     model_file_path = models.TextField()
 
     objects = GetManager()
@@ -401,10 +357,6 @@ class DynamicField(models.Model):
     # is it made from multiple vars?
     exploded = models.BooleanField()
 
-    # if field is exploded, then some nrv data was used here
-    nrv_instance = models.ForeignKey(
-        "VariableDataNRV", on_delete=models.CASCADE, related_name="dynamic_field", blank=True, null=True)
-
     # actual variable instance it represents
     variable_instance = models.ForeignKey(
         "Variable", on_delete=models.CASCADE, related_name="dynamic")
@@ -443,7 +395,7 @@ class LogEntry(models.Model):
 
     timestamp = models.DateTimeField(auto_now_add=True)
     upload = models.ForeignKey(
-        "Upload", on_delete=models.SET_NULL, related_name="logs", blank=True, null=True)
+        "Upload", on_delete=models.CASCADE, related_name="logs", blank=True, null=True)
     code = models.CharField(max_length=15, null=True, blank=True)
     color = models.CharField(max_length=15, null=True, blank=True)
     message = models.TextField()

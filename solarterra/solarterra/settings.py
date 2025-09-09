@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-import os, sys
+import os
+import sys
 import json
 
 os.environ['OPENBLAS_NUM_THREADS'] = '1'
@@ -19,16 +20,17 @@ os.environ['OPENBLAS_NUM_THREADS'] = '1'
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-CONFIG_PATH = os.path.abspath(os.path.join(BASE_DIR, '..', 'configs/settings_sensitive.json'))
+CONFIG_PATH = os.path.abspath(os.path.join(
+    BASE_DIR, '..', 'configs/settings_sensitive.json'))
 with open(CONFIG_PATH) as config_file:
-    config=json.load(config_file)
+    config = json.load(config_file)
 
 
-SUB_PATH = os.path.abspath(os.path.join(BASE_DIR, '..', 'solarterra_submodules'))
+SUB_PATH = os.path.abspath(os.path.join(
+    BASE_DIR, '..', 'solarterra_submodules'))
 MODEL_DIR_PATH = os.path.join(SUB_PATH, 'data_cdf/models')
 
 sys.path.append(SUB_PATH)
-
 
 
 # Quick-start development settings - unsuitable for production
@@ -40,9 +42,13 @@ SECRET_KEY = config['S_K']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-LOG_FILE = os.path.abspath(os.path.join(BASE_DIR, '..', 'solarterra_submodules/logs/logfile'))
+LOG_FILE = os.path.abspath(os.path.join(
+    BASE_DIR, '..', 'solarterra_submodules/logs/logfile'))
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1']
+COLLISIONS_LOGS = os.path.abspath(os.path.join(
+    BASE_DIR, '..', 'solarterra_submodules/logs/collisions'))
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -56,8 +62,9 @@ INSTALLED_APPS = [
     'django.forms',
     'data_cdf',
     'load_cdf',
-    'pages',
-    "django_extensions", #Joe's addition for debugging purposes, remove at merge/install django-extentions with pip
+    # 'pages',
+    # Joe's addition for debugging purposes, remove at merge/install django-extentions with pip
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -75,7 +82,7 @@ ROOT_URLCONF = 'solarterra.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [ os.path.join(BASE_DIR, 'templates/') ],
+        'DIRS': [os.path.join(BASE_DIR, 'templates/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -98,12 +105,12 @@ WSGI_APPLICATION = 'solarterra.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE' : 'django.db.backends.postgresql',
-        'NAME' : config['DB_NAME'],
-        'USER' : config['DB_USER'],
-        'PASSWORD' : config['DB_PASS'],
-        'HOST' : config['DB_HOST'],
-        'PORT' : config['DB_PORT'],
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config['DB_NAME'],
+        'USER': config['DB_USER'],
+        'PASSWORD': config['DB_PASS'],
+        'HOST': config['DB_HOST'],
+        'PORT': config['DB_PORT'],
     }
 }
 
@@ -148,7 +155,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', 'solarterra_submodules/static/'))
+STATIC_ROOT = os.path.abspath(os.path.join(
+    BASE_DIR, '..', 'solarterra_submodules/static/'))
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
