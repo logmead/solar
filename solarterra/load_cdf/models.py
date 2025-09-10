@@ -217,36 +217,36 @@ class Variable(models.Model):
     # original cdf datatype, before conversion to Django
     # TYPE_CONVERSION table is currently in utils.py
     # TODO: should be taken from cdaweb manual
-    datatype = models.CharField(max_length=200, null=True)
+    datatype = models.CharField(max_length=200, blank=True, null=True)
 
-    dims = models.SmallIntegerField(null=True)
+    dims = models.SmallIntegerField(blank=True,null=True)
     # TODO костыль, пока у нас нет спектрограмм
-    dim_sizes = models.SmallIntegerField(null=True)
+    dim_sizes = models.SmallIntegerField(blank=True,null=True)
 
-    is_displayed = models.BooleanField(null=True, default=False)
+    is_displayed = models.BooleanField(blank=True,null=True, default=False)
 
     # this one for future use, currently 3 values ['time', 'orbit', 'NA']
-    data_category = models.CharField(max_length=200, null=True)
+    data_category = models.CharField(max_length=200,blank=True, null=True)
 
     # -----MF fields------
 
-    catdesc = models.CharField(max_length=200, null=True)
-    var_notes = models.CharField(max_length=200, null=True)
-    depend_0 = models.CharField(max_length=200, null=True)
-    display_type = models.CharField(max_length=200, null=True)
-    fillval = models.CharField(max_length=200, null=True)
-    output_format = models.CharField(max_length=200, null=True)
-    lablaxis = models.CharField(max_length=200, null=True)
+    catdesc = models.CharField(max_length=200,blank=True, null=True)
+    var_notes = models.TextField(blank=True, null=True)
+    depend_0 = models.CharField(max_length=200,blank=True, null=True)
+    display_type = models.CharField(max_length=200,blank=True, null=True)
+    fillval = models.CharField(max_length=200,blank=True, null=True)
+    output_format = models.CharField(max_length=200,blank=True, null=True)
+    lablaxis = models.CharField(max_length=200,blank=True, null=True)
 
-    units = models.CharField(max_length=200, null=True)
+    units = models.CharField(max_length=200,blank=True, null=True)
     # char bc it depends on units
-    validmin = models.CharField(max_length=200, null=True)
-    validmax = models.CharField(max_length=200, null=True)
+    validmin = models.CharField(max_length=200,blank=True, null=True)
+    validmax = models.CharField(max_length=200,blank=True, null=True)
     # VAR_TYPE
-    var_logic_type = models.CharField(max_length=200, null=True)
-    scaletyp = models.CharField(max_length=200, null=True)
-    scalemin = models.CharField(max_length=200, null=True)
-    scalemax = models.CharField(max_length=200, null=True)
+    var_logic_type = models.CharField(max_length=200,blank=True, null=True)
+    scaletyp = models.CharField(max_length=200,blank=True, null=True)
+    scalemin = models.CharField(max_length=200,blank=True, null=True)
+    scalemax = models.CharField(max_length=200,blank=True, null=True)
 
     dataset = models.ForeignKey(
         "Dataset", on_delete=models.CASCADE, related_name="variables")

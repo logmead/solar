@@ -23,7 +23,7 @@ UPLOAD_ZIP_DIR = "/spool/uploads_zipped"
 
 def get_var_field(mf_str):
     res = mf_str.lstrip('MF_').lstrip('MFLBL_').lower()
-    print("IN PARSER", mf_str, res)
+  
     return res
 
 
@@ -180,27 +180,27 @@ class Command(BaseCommand):
                         upload=upload)
                     exit(2)
 
-                # No collisions, move files to dataset directory and create CDFFileStored instances
-                make_log_entry(
-                    "OK", f"No collisions found for dataset {dataset_tag}, proceeding to storing files", upload=upload)
-                upload.file_count = len(cdf_files)
-                upload.save()
+            # No collisions, move files to dataset directory and create CDFFileStored instances
+            make_log_entry(
+                "OK", f"No collisions found for dataset {dataset_tag}, proceeding to storing files", upload=upload)
+            upload.file_count = len(cdf_files)
+            upload.save()
 
-                for cdf_file in cdf_files:
-                    # TODO: remake it into a bulk save
-                    target_path = os.path.join(dataset_dir, cdf_file)
+            for cdf_file in cdf_files:
+                # TODO: remake it into a bulk save
+                target_path = os.path.join(dataset_dir, cdf_file)
 
-                    # Copy the file to the target directory
-                    shutil.copy2(os.path.join(temp_dir, cdf_file), target_path)
+                # Copy the file to the target directory
+                shutil.copy2(os.path.join(temp_dir, cdf_file), target_path)
 
-                    # Create CDFFileStored instance for the file
-                    cdf_stored = CDFFileStored(
-                        full_path=target_path,
-                        upload=upload
-                    )
-                    cdf_stored.save()
-                make_log_entry(
-                    'OK', f"All CDF files stored successfully in {dataset_dir}", upload=upload)
+                # Create CDFFileStored instance for the file
+                cdf_stored = CDFFileStored(
+                    full_path=target_path,
+                    upload=upload
+                )
+                cdf_stored.save()
+            make_log_entry(
+                'OK', f"All CDF files stored successfully in {dataset_dir}", upload=upload)
 
         # open json and save to Dataset all info from GlobalAttributes
 
@@ -342,8 +342,6 @@ class Command(BaseCommand):
             for json_var_attr, var_attr_dict in var_dict.items():
                 # find Variable instance field to save data to
                 var_field = get_var_field(json_var_attr)
-                print(
-                    f"{var_instance}, {var_field}, {var_attr_dict['value']}, {type(var_attr_dict['value'])}")
 
                 if var_attr_dict['value'] is None:
                     continue
@@ -351,6 +349,7 @@ class Command(BaseCommand):
                 try:
                     setattr(var_instance, var_field,
                             str(var_attr_dict['value']))
+
                 except Exception as e:
                     print(
                         f"OMG {var_instance}, {var_field}, {var_attr_dict['value']}, {type(var_attr_dict['value'])}, {e}")
@@ -370,9 +369,19 @@ class Command(BaseCommand):
                 var_attr_instance.multipart = var_attr_dict['value'] is list
                 var_attr_instance.save()
 
-            var_instance.save()
-            print(var_instance.datatype, var_instance.dims,
-                  var_instance.dim_sizes, var_instance.data_category)
+            try:
+                var_instance.save()
+            except Exception as e:
+                print(dataset, var_instance.name, e)
+
+        # get variables that do not have var_logic_type set
+        # and set it manually from the VAR_TYPE attribute
+        set_var_type = var_qs.filter(var_logic_type__isnull=True)
+
+        for var in set_var_type:
+            var.var_logic_type = var.attributes.get(
+                title='VAR_TYPE').get_value()
+            var.save()
 
         # - create instances of dataset attribute and data attribute values, look at json at the same time
 
