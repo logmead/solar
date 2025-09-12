@@ -14,7 +14,6 @@ echo "Starting load process"
 #echo $logfile
 
 declare -a zips=(
-[0]='WIND_WIND_OR_PRE_v01_u2025-08-07T18-35-00.zip'
 [1]='ACE_AC_H0_MFI_v01_u2025-09-09T13-45-00.zip'
 [2]='ACE_AC_OR_SSC_v01_u2025-09-09T13-49-00.zip'
 [3]='ACE_AC_H0_SWE_v01_u2025-09-09T13-47-00.zip'
@@ -33,7 +32,6 @@ declare -a zips=(
 )
 
 declare -a matches=(
-[0]='WIND_WIND_OR_PRE_v01_matchfile.json'
 [1]='ACE_AC_H0_MFI_v01_matchfile.json'
 [2]='ACE_AC_OR_SSC_v01_matchfile.json'
 [3]='ACE_AC_H0_SWE_v01_matchfile.json'
@@ -54,7 +52,7 @@ declare -a matches=(
 lee=${#zips[@]}
 
 #for i in $(seq 0 $lee)
-for i in $(seq 0 3)
+for i in $(seq 1 14)
 do
 python manage.py 01_evaluate "/spool/uploads_zipped/${zips[$i]}" "/spool/match_files/${matches[$i]}"
 done

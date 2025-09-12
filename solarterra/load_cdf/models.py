@@ -219,34 +219,35 @@ class Variable(models.Model):
     # TODO: should be taken from cdaweb manual
     datatype = models.CharField(max_length=200, blank=True, null=True)
 
-    dims = models.SmallIntegerField(blank=True,null=True)
+    dims = models.SmallIntegerField(blank=True, null=True)
     # TODO костыль, пока у нас нет спектрограмм
-    dim_sizes = models.SmallIntegerField(blank=True,null=True)
-
-    is_displayed = models.BooleanField(blank=True,null=True, default=False)
+    dim_sizes = models.SmallIntegerField(blank=True, null=True)
+    # doing this to explode multidim variables during creation
+    dim_values = models.TextField(blank=True, null=True)
+    is_displayed = models.BooleanField(blank=True, null=True, default=False)
 
     # this one for future use, currently 3 values ['time', 'orbit', 'NA']
-    data_category = models.CharField(max_length=200,blank=True, null=True)
+    data_category = models.CharField(max_length=200, blank=True, null=True)
 
     # -----MF fields------
 
-    catdesc = models.CharField(max_length=200,blank=True, null=True)
+    catdesc = models.CharField(max_length=200, blank=True, null=True)
     var_notes = models.TextField(blank=True, null=True)
-    depend_0 = models.CharField(max_length=200,blank=True, null=True)
-    display_type = models.CharField(max_length=200,blank=True, null=True)
-    fillval = models.CharField(max_length=200,blank=True, null=True)
-    output_format = models.CharField(max_length=200,blank=True, null=True)
-    lablaxis = models.CharField(max_length=200,blank=True, null=True)
+    depend_0 = models.CharField(max_length=200, blank=True, null=True)
+    display_type = models.CharField(max_length=200, blank=True, null=True)
+    fillval = models.CharField(max_length=200, blank=True, null=True)
+    output_format = models.CharField(max_length=200, blank=True, null=True)
+    lablaxis = models.CharField(max_length=200, blank=True, null=True)
 
-    units = models.CharField(max_length=200,blank=True, null=True)
+    units = models.CharField(max_length=200, blank=True, null=True)
     # char bc it depends on units
-    validmin = models.CharField(max_length=200,blank=True, null=True)
-    validmax = models.CharField(max_length=200,blank=True, null=True)
+    validmin = models.CharField(max_length=200, blank=True, null=True)
+    validmax = models.CharField(max_length=200, blank=True, null=True)
     # VAR_TYPE
-    var_logic_type = models.CharField(max_length=200,blank=True, null=True)
-    scaletyp = models.CharField(max_length=200,blank=True, null=True)
-    scalemin = models.CharField(max_length=200,blank=True, null=True)
-    scalemax = models.CharField(max_length=200,blank=True, null=True)
+    var_logic_type = models.CharField(max_length=200, blank=True, null=True)
+    scaletyp = models.CharField(max_length=200, blank=True, null=True)
+    scalemin = models.CharField(max_length=200, blank=True, null=True)
+    scalemax = models.CharField(max_length=200, blank=True, null=True)
 
     dataset = models.ForeignKey(
         "Dataset", on_delete=models.CASCADE, related_name="variables")
@@ -313,6 +314,7 @@ class DynamicModel(models.Model):
     # actual Dataset it is made for
     dataset_instance = models.OneToOneField(
         "Dataset", on_delete=models.CASCADE, related_name="dynamic", blank=True, null=True)
+
     model_file_path = models.TextField()
 
     objects = GetManager()
@@ -383,6 +385,25 @@ class DynamicField(models.Model):
             return time_field.field_name
         else:
             return None
+
+
+class DataType(models.Model):
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # label from cdf file, set to each variable
+    cdf_file_label = models.CharField(max_length=50, unique=True)
+    py_cdf_label = models.CharField(max_length=50, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    # default empty value (could be multiple)
+    fillval = models.CharField(max_length=50, blank=True, null=True)
+
+    # for template construction
+    # django field closest to
+    django_field = models.CharField(max_length=200)
+    max_digits = models.PositiveSmallIntegerField(blank=True, null=True)
+    max_length = models.PositiveSmallIntegerField(blank=True, null=True)
+    decimal_places = models.PositiveSmallIntegerField(blank=True, null=True)
+
 
 # ------------demarcation to logging---------------------#
 

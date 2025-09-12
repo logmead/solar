@@ -23,7 +23,7 @@ UPLOAD_ZIP_DIR = "/spool/uploads_zipped"
 
 def get_var_field(mf_str):
     res = mf_str.lstrip('MF_').lstrip('MFLBL_').lower()
-  
+
     return res
 
 
@@ -369,6 +369,19 @@ class Command(BaseCommand):
                 var_attr_instance.multipart = var_attr_dict['value'] is list
                 var_attr_instance.save()
 
+            """
+            adding dimension values to explode later
+            - check if variable attributes contain depend 1
+            - in cdf file, fing variable from depend 1 and save 
+            its value into the dim_values of the current variable
+            """
+            explosion = var_instance.attributes.filter(
+                title__icontains='depend_1')
+            if explosion.count() > 0:
+                depend_var = explosion.first().get_value()
+                var_instance.dim_values = str(cdf_obj[depend_var][...])
+                print(
+                    f"{dataset} found explosion {var_instance} {depend_var} {var_instance.dim_values}")
             try:
                 var_instance.save()
             except Exception as e:
