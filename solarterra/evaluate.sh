@@ -1,14 +1,14 @@
 #! /bin/bash
 
 
-project_dir="/home/j.krasiwski//solar_main/solar/solarterra"
+#project_dir="/home/j.krasiwski//solar_main/solar/solarterra"
 #logfile="/solar/solarterra_submodules/logs/logfile"
-venv="/home/j.krasiwski/solar_main/solar_venv/bin/activate"
+#venv="/home/j.krasiwski/solar_main/solar_venv/bin/activate"
 #file_dir=$1
 #exp_name=$(basename "$file_dir")
 
-source $venv
-cd $project_dir
+#source $venv
+#cd $project_dir
 
 echo "Starting load process"
 #echo $logfile
@@ -52,8 +52,10 @@ declare -a matches=(
 lee=${#zips[@]}
 
 #for i in $(seq 0 $lee)
-for i in $(seq 1 14)
+
+for i in $(seq 1 15)
 do
+#echo "/spool/uploads_zipped/${zips[$i]}" "/spool/match_files/${matches[$i]}"
 python manage.py 01_evaluate "/spool/uploads_zipped/${zips[$i]}" "/spool/match_files/${matches[$i]}"
 done
 

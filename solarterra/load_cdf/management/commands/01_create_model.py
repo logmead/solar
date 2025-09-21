@@ -17,16 +17,25 @@ def get_field_values(variable, postfix=None):
     field['title'] = safe_str(variable.name)
     if postfix is not None:
         field['title'] += f"_{postfix}"
-    field['datatype'] = DataType.object.get(cdf_file_label=variable.datatype)
+    if variable.datatype is None:
+        v_type = DataType.objects.get(cdf_file_label='CDF_CHAR')
+    else:
+        v_type = DataType.objects.get(cdf_file_label=variable.datatype) 
+    field['datatype'] = v_type
 
     return field
 
 
 # REMOVE THIS FOR THE GENERAL CASE
 def parse_dim_values(dim_values_str):
-    raw_values = dim_values.strip('[]').split().strip('\'')
+    raw_values = dim_values_str.strip('[]').split()
     return [item.replace('.-', '_') for item in map(lambda x: x.strip('\''), raw_values) if item != '']
 
+def parse_explosion(label):
+    parts = label.lower().strip('[]').split(',')
+    res = [ item.replace('\'', '').split('(')[0].strip() for item in parts ]
+    res2 = [ item.replace(' ', '_').replace('/', '_') for item in res ]
+    return res2
 
 class Command(BaseCommand):
 
@@ -64,15 +73,15 @@ class Command(BaseCommand):
         variables = dataset_instance.variables.all()
 
         for variable in variables:
-            if variable.dim_sizes > 1:
+            if variable.dim_sizes is not None and variable.dim_sizes > 1:
                 # create dim_sizes model fields instead of one
-                for field_postfix in parse_dim_values(variable.dim_values):
+                for field_postfix in parse_explosion(variable.lablaxis):
                     field = get_field_values(variable, field_postfix)
                     m['fields'].append(field)
 
                     dfl.append(DynamicField(
                         field_name=field['title'],
-                        exploded=False,
+                        exploded=True,
                         variable_instance=variable,
                         dynamic_model=dmi,
                     ))

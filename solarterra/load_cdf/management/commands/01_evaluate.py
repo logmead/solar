@@ -22,9 +22,12 @@ UPLOAD_ZIP_DIR = "/spool/uploads_zipped"
 
 
 def get_var_field(mf_str):
-    res = mf_str.lstrip('MF_').lstrip('MFLBL_').lower()
-
-    return res
+    if mf_str.startswith('MF_'):
+        return mf_str[3:].lower()
+    elif mf_str.startswith('MFLBL_'):
+        return mf_str[6:].lower()
+    else:
+        print(f"JSON: VAR ATTRIBUTE NAME is weird {mf_str}")
 
 
 class MetaAggregator():
@@ -123,7 +126,7 @@ class Command(BaseCommand):
         dataset = Dataset.objects.get_or_none(tag=dataset_tag)
         if dataset is None:
             # Create a new dataset if it doesn't exist
-            dataset = Dataset(tag=dataset_tag)
+            dataset = Dataset(tag=dataset_tag, directory=str(dataset_dir))
             dataset.save()
             make_log_entry(
                 "CREATED", f"Dataset instance created for {dataset_tag}",
@@ -347,6 +350,7 @@ class Command(BaseCommand):
                     continue
                 # save data
                 try:
+                    print(var_instance.name, var_field, var_attr_dict['value'])
                     setattr(var_instance, var_field,
                             str(var_attr_dict['value']))
 

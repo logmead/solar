@@ -101,7 +101,8 @@ class Dataset(models.Model):
     # the tag is the name of the directory where the files are stored + the name of the match file
     # e.g. WIND_WIND_OR_PRE_v01
     tag = models.CharField(max_length=100, unique=True)
-
+    # should be required
+    directory = models.TextField(blank=True, null=True)
     # global attributes from match file - tag parts
     mission = models.CharField(max_length=100)
     source_name = models.CharField(max_length=100)

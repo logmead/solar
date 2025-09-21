@@ -64,7 +64,7 @@ INSTALLED_APPS = [
     'load_cdf',
     # 'pages',
     # Joe's addition for debugging purposes, remove at merge/install django-extentions with pip
-    "django_extensions",
+    #"django_extensions",
 ]
 
 MIDDLEWARE = [

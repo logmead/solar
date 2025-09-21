@@ -38,7 +38,7 @@ lee=${#tags[@]}
 for i in $(seq 1 15)
 do
 #echo "${tags[$i]}"
-python manage.py 01_create_model "${tags[$i]}"
+python manage.py 01_save_data "${tags[$i]}"
 done
 
 
