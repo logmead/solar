@@ -260,6 +260,14 @@ class Variable(models.Model):
 
     def is_data(self):
         return var_logic_type.lower() == 'data'
+    
+    def is_decimal(self):
+        type_instance = DataType.objects.get(cdf_file_label=self.datatype)
+        return type_instance.django_field == 'DecimalField'
+
+    def get_precision(self):
+        type_instance = DataType.objects.get(cdf_file_label=self.datatype)
+        return type_instance.decimal_places , type_instance.max_digits
 
 
 class VariableAttribute(models.Model):
@@ -301,6 +309,7 @@ class VariableAttributeValue(models.Model):
 
     objects = GetManager()
 
+
 # ------------demarcation to dynamic models---------------------#
 
 # TODO: describe DynamicModel and DynamicField
@@ -333,6 +342,17 @@ class DynamicModel(models.Model):
             return model_class
         except:
             return None
+    
+    def objects_count(self):
+        mm = self.resolve_class()
+        return mm.objects.count()
+
+    def files_count(self):
+        mm = self.resolve_class()
+        return mm.objects.distinct('file_name').count()
+
+    def data_variables(self):
+        return self.dataset_instance.variables.filter(var_logic_type='data')
 
     def get_time_limits(self, to_datetime=True):
         time_field_name = self.get_time_fields().first().field_name
@@ -359,6 +379,8 @@ class DynamicField(models.Model):
 
     # is it made from multiple vars?
     exploded = models.BooleanField()
+
+    exploded_index = models.PositiveSmallIntegerField(blank=True, null=True)
 
     # actual variable instance it represents
     variable_instance = models.ForeignKey(

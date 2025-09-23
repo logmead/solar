@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     'django.forms',
     'data_cdf',
     'load_cdf',
-    # 'pages',
+    'pages',
     # Joe's addition for debugging purposes, remove at merge/install django-extentions with pip
     #"django_extensions",
 ]

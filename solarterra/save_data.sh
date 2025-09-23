@@ -31,11 +31,12 @@ declare -a tags=(
 [15]='WIND_WI_OR_PRE_v01'
 )
 
+#INTERBALL_IT_K0_MFI_v01
 
 lee=${#tags[@]}
 
 #for i in $(seq 0 $lee)
-for i in $(seq 1 15)
+for i in $(seq 4 5)
 do
 #echo "${tags[$i]}"
 python manage.py 01_save_data "${tags[$i]}"

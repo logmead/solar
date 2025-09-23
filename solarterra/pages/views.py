@@ -34,34 +34,20 @@ def system_data(request):
 def data_info(request):
     template = "pages/data_official.html"
     context = {
-        "models": []
+            'models' : DynamicModel.objects.all()
     }
-
+    """
     dynamic_models = DynamicModel.objects.order_by(
-        '-dataset_instance__created')
+        'dataset_instance__tag')
     for dm in dynamic_models:
         model_class = dm.resolve_class()
         dts = dm.dataset_instance
 
         # check loading script for wi_ho consistency with times
 
-        ts_start_limit, ts_end_limit = dm.get_time_limits()
-        t_start = ts_start_limit.date() if ts_start_limit else ""
-        t_end = ts_end_limit.date() if ts_end_limit else ""
-        time_delta_str = f"{t_start}  -  {t_end}"
-
         # multidim = var.get_attribute_value('depend_1')
 
-        vars = dm.dataset_instance.variables.filter(
-            non_record_variant=False)
-        var_dicts = [{
-            'name': var.name,
-            'description': var.get_attribute_value('fieldnam'),
-            'data_type': var.is_data,
-            'depends_on': var.get_attribute_value('depend_0'),
-            'multidim': var.dependency_nrv_var().nrv_value_string() if var.data_dimensions() > 1 else "",
-            'units': var.get_attribute_value('units'),
-        } for var in vars]
+        vars = dm.dataset_instance.variables.filter(var_logic_type='data')
 
         model_dict = {
             'id': dm.id,
@@ -76,7 +62,7 @@ def data_info(request):
             'vars': var_dicts,
         }
         context['models'].append(model_dict)
-
+    """
     return render(request, template, context)
 
 
@@ -89,7 +75,7 @@ def technical_data(request, dataset_id):
         raise Http404
 
     vars = Variable.objects.filter(dataset=dts).order_by(
-        "non_record_variant", "name")
+         "name")
 
     context = {
         'dataset': dts,

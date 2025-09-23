@@ -33,8 +33,14 @@ def parse_dim_values(dim_values_str):
 
 def parse_explosion(label):
     parts = label.lower().strip('[]').split(',')
-    res = [ item.replace('\'', '').split('(')[0].strip() for item in parts ]
-    res2 = [ item.replace(' ', '_').replace('/', '_') for item in res ]
+    res = [ item.replace('\'', '').replace('.', '').split('(')[0].strip() for item in parts ]
+    if len(set(res)) < len(res):
+        print("oh no! some names were the same!")
+        res = [ item.replace('\'', '').replace('(', '').replace(')', '').strip() for item in parts ]
+
+        
+    res2 = [ item.replace(' ', '_').replace('/', '_').replace('-', '_') for item in res ]
+    print(res2)
     return res2
 
 class Command(BaseCommand):
@@ -69,19 +75,21 @@ class Command(BaseCommand):
         )
 
         dynamic_field_list = dfl = []
-
-        variables = dataset_instance.variables.all()
+        
+        # filter out nrv
+        variables = dataset_instance.variables.filter(dims__isnull=False)
 
         for variable in variables:
-            if variable.dim_sizes is not None and variable.dim_sizes > 1:
+            if variable.dim_sizes is not None and variable.dim_sizes > 0:
                 # create dim_sizes model fields instead of one
-                for field_postfix in parse_explosion(variable.lablaxis):
+                for index, field_postfix in enumerate(parse_explosion(variable.lablaxis)):
                     field = get_field_values(variable, field_postfix)
                     m['fields'].append(field)
 
                     dfl.append(DynamicField(
                         field_name=field['title'],
                         exploded=True,
+                        exploded_index=index,
                         variable_instance=variable,
                         dynamic_model=dmi,
                     ))

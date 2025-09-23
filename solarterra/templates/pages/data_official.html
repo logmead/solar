@@ -16,27 +16,23 @@
     <tr>
         <th>id</th>
         <th>Описание</th>
-        <th>Временной интервал</th>
         <th>Количество записей</th>
-        <!-- <th>Количество файлов</th> -->
+        <th>Количество файлов</th> 
         <th>Файловая директория</th>
         
-        <th>Загружено</th>
         <th></th>
         
     </tr>
     {% for model in models %}
         <tr>
-            <td>{{ model.title }}</td>
+            <td>{{ model.dataset_instance.tag }}</td>
             
-            <td>{{ model.description }}</td>
-            <td>{{ model.time_delta }}</td>
+            <td>{{ model.dataset_instance.text_description }}</td>
             <td>{{ model.objects_count }}</td>
-            <!-- <td>{{ model.file_count }}</td> -->
-            <td>{{ model.file_path }}</td>
+            <td>{{ model.files_count }}</td>
+            <td>{{ model.dataset_instance.directory }}</td>
             
-            <td>{{ model.created }}</td>
-            <td class="clickable"><a target="_blank" href="{% url 'data_tech' model.experiment %}">.cdf metadata</a></td>
+            <td class="clickable"><a target="_blank" href="{% url 'data_tech' model.dataset_instance.id %}">All CDF metadata</a></td>
 
         </tr>
         <tr >
@@ -47,19 +43,17 @@
             <th>id</th>
             <th colspan="2" >Описание</th>
             <th>Единицы измерения</th>
-            <th>Зависит от</th>
             <th>Размерность</th>
-            <th>Для построения?</th>
+            <th>Тип данных</th>
         </tr>
-        {% for var in model.vars %}
+        {% for var in model.data_variables %}
             <tr class="sub-rows-{{ model.id }}" hidden>
                 <td>{{ var.name }}</td>
-                <td colspan="2">{{ var.description }}</td>
+                <td colspan="2">{{ var.catdesc }}</td>
                 <td>{{ var.units }}</td>
                 
-                <td>{{ var.depends_on }}</td>
-                <td>{{ var.multidim }}</td>
-                <td>{{ var.data_type }}</td>
+		<td>{{ var.dims }}{% if var.dim_sizes %} [{{ var.dim_sizes }}]{% endif %}</td>
+                <td>{{ var.datatype }}</td>
             </tr>
         {% endfor %}
         <tr><th colspan="100">&nbsp;</th></tr>

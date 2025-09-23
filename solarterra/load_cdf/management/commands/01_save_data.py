@@ -15,36 +15,41 @@ import math
 # construct value lists once per file, cause joins
 def value_arrays(dynamic_fields, cdf_object):
     arrays = {}
-    
+    leng = 0
     for field in dynamic_fields:
         var = field.variable_instance
 
         # get part of values if varaible is multidimensional
         if field.exploded:
-            array = cdf_object[var.name][:, field.nrv_instance.order]
+            array = cdf_object[var.name][:, field.exploded_index]
         else:
             array = cdf_object[var.name][...]    
-            
         
+        if len(array) > leng:
+            leng = len(array)
+       
+        print(field.field_name, len(array))
 
         # if array of timestamps
-        if var.is_datetime():
-
-            val_min, val_min_type = var.get_attribute_value("validmin", get_type=True)
-            vin = make_type(val_min, val_min_type)
-            val_max, val_max_type = var.get_attribute_value("validmax", get_type=True)
-            vax = make_type(val_max, val_max_type)
+        if var.datatype == 'CDF_EPOCH':
+            #val_min, val_min_type = var.get_attribute_value("validmin", get_type=True)
+            #vin = make_type(val_min, val_min_type)
+            #val_max, val_max_type = var.get_attribute_value("validmax", get_type=True)
+            #vax = make_type(val_max, val_max_type)
             
-            arrays[field.field_name] = list(map(lambda x: ts_bigint_resolver(x) if x > vin and x < vax else None, array))
-            
+            #arrays[field.field_name] = list(map(lambda x: ts_bigint_resolver(x) if x > vin and x < vax else None, array))
+            arrays[field.field_name] = list(map(lambda x: ts_bigint_resolver(x), array))
+        else: 
+            arrays[field.field_name] = array
             
         # if array of floats
+        """
         elif var.is_decimal():
-            
+            print(f"var {var} is decimal")
             # print(f"NEW ARRAY {array.dtype}, {type(array)}")
             
             places, digits = var.get_precision()
-            fill_val = var.get_attribute_value("fillval")
+            fill_val = var.fillval
 
             b = array.astype(str)
 
@@ -53,25 +58,34 @@ def value_arrays(dynamic_fields, cdf_object):
             context = Context(prec=digits)
             setcontext(context)
 
-            places = Decimal(str(10 ** -(places)))
+            places = Decimal(str(10 ** -(places)))            
+            ll = []
+            for index, x in enumerate(b):
+                if x == str_nan:
+                    ll.append(None)
+                else:
+                    #try:
+                    print(x, places, digits)
+                    item = Decimal(x).quantize(places, context=context)
+                    ll.append(item)
+                    #except Exception as e:
+                    #    ll.append(None)
+                    #    print("ERRROR IN FLOAT")
+                    #    print(index, f"|{x}|")
+                    #    print(e)
+                    #    exit()
 
-
-            try:
-                arrays[field.field_name] = list(map(lambda x: None if x == str_nan else Decimal(x).quantize(places, context=context), b))
-            except Exception as e:
-                print("ERRROR IN FLOAT")
-                print(e)
-                exit()
-
+            arrays[field.field_name] = ll
+            #arrays[field.field_name] = list(map(lambda x: None if x == str_nan else Decimal(x).quantize(places, context=context), b))
+        """
             
         # any other array
-        else:
-
-            fill_val, fill_val_type = var.get_attribute_value("fillval", get_type=True)
-            fill = make_type(fill_val, fill_val_type)
-            arrays[field.field_name] = list(map(lambda x: None if x == fill else x, array))
             
-    return arrays
+        #fill_val, fill_val_type = var.get_attribute_value("fillval", get_type=True)
+        #fill = make_type(fill_val, fill_val_type)
+        #arrays[field.field_name] = list(map(lambda x: None if x == fill else x, array))
+        
+    return leng, arrays
             
 class Command(BaseCommand):
 
@@ -123,40 +137,46 @@ class Command(BaseCommand):
         print('file_number', file_number)
         #make_log_entry("FOUND", f"In \"{exp.dir_path}\" found \"{file_number}\" .cdf files")
 
-        #if file_number == 0:
-        #    make_log_entry("EXIT", "Data loading script finished")
-        #    return 0
+        if file_number == 0:
+            print("no files found")
+            make_log_entry("EXIT", "Data loading script finished")
+            return 0
         
-        """
-        variables = exp.variables.all()
-        any_rv = variables.filter(non_record_variant=False).first()
+        
+        #variables = exp.variables.all()
+        #any_rv = variables.filter(non_record_variant=False).first()
         dynamic_fields = dmi.fields.all()
-        make_log_entry("", "Starting data parsing...")
+        #make_log_entry("", "Starting data parsing...")
 
         counter = 0
         
         for file_path in files_list:
             
             file_name = file_path.strip('/').split('/')[-1]
-            
+            print("FILE", file_name) 
             cdf_object = pycdf.CDF(file_path)
-            leng = len(cdf_object[any_rv.name])
-            model_instances = [model_class() for _ in range(leng)]
+
+            #model_instances = [model_class() for _ in range(leng)]
             
 
             # get all value arrays in a dict with keys
-            field_dict = value_arrays(dynamic_fields, cdf_object)
+            leng, field_dict = value_arrays(dynamic_fields, cdf_object)
             
+            model_instances = []
 
             # set data
             for index in range(leng):
-                setattr(model_instances[index], 'file_name', file_name)
+
+                instance = model_class()
+                setattr(instance, 'file_name', file_name)
 
                 for attr, vals in field_dict.items():
-                    setattr(model_instances[index], attr, vals[index])
+                    if index < len(vals):
+                        setattr(instance, attr, vals[index])
 
-            
-            model_instances[:] = [inst for inst in model_instances if inst.epoch is not None]            
+                model_instances.append(instance)
+
+            #model_instances[:] = [inst for inst in model_instances if inst.epoch is not None]            
             
             
             del cdf_object
@@ -169,18 +189,18 @@ class Command(BaseCommand):
                 print(e)
                 print(repr(e))
                 exit()
-                make_log_entry("ERROR", f"Could not load data from {file_name}. Exception {e.__class__.__name__} occured.", addition=e)
+                #make_log_entry("ERROR", f"Could not load data from {file_name}. Exception {e.__class__.__name__} occured.", addition=e)
             else:
                 counter += 1
 
             #make_log_entry("CREATED", f"Loaded {len(model_instances)} entries from {file_name}")
             
             del model_instances
-            if counter % 10 == 0:
-                make_log_entry("CREATED", f"Loaded {counter} files...")
-
-        make_log_entry("CREATED", f"Loaded {counter} files out of {len(files_list)}.")
-        make_log_entry("EXIT", "Data loading script finished")
-        """ 
+            #if counter % 10 == 0:
+            #    make_log_entry("CREATED", f"Loaded {counter} files...")
+        
+        #make_log_entry("CREATED", f"Loaded {counter} files out of {len(files_list)}.")
+        #make_log_entry("EXIT", "Data loading script finished")
+        
 
 

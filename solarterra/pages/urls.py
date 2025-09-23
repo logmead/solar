@@ -7,7 +7,7 @@ urlpatterns = [
     path('', views.main_page, name="main_page"),
  
     path('data_info', views.data_info, name="data"),
-    path('data_technical/<uuid:exp_id>', views.technical_data, name="data_tech"),
+    path('data_technical/<uuid:dataset_id>', views.technical_data, name="data_tech"),
     path('system_data', views.system_data, name="system_data"),
     path('logs', views.logs, name="logs"),
 
