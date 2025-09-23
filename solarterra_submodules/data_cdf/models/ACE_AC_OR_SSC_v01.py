@@ -11,21 +11,17 @@ class ACE_AC_OR_SSC_v01_data(models.Model):
     
     epoch = models.BigIntegerField( blank=True, null=True)
     
-    gse_lat = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    gse_lat = models.FloatField( blank=True, null=True)
     
-    gse_lon = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    gse_lon = models.FloatField( blank=True, null=True)
     
-    radius = models.DecimalField(max_digits=25,decimal_places=12, blank=True, null=True)
+    radius = models.FloatField( blank=True, null=True)
     
-    xyz_gse_x = models.DecimalField(max_digits=25,decimal_places=12, blank=True, null=True)
+    xyz_gse_x = models.FloatField( blank=True, null=True)
     
-    xyz_gse_y = models.DecimalField(max_digits=25,decimal_places=12, blank=True, null=True)
+    xyz_gse_y = models.FloatField( blank=True, null=True)
     
-    xyz_gse_z = models.DecimalField(max_digits=25,decimal_places=12, blank=True, null=True)
-    
-    cartesian = models.TextField( blank=True, null=True)
-    
-    xyz_lbl = models.TextField( blank=True, null=True)
+    xyz_gse_z = models.FloatField( blank=True, null=True)
     
 
     file_name = models.CharField(max_length=100)

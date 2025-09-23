@@ -11,27 +11,21 @@ class SPEKTRR_SPR_OR_DEF_v01_data(models.Model):
     
     epoch = models.BigIntegerField( blank=True, null=True)
     
-    sc_pos_gse_x = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    sc_pos_gse_x = models.FloatField( blank=True, null=True)
     
-    sc_pos_gse_y = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    sc_pos_gse_y = models.FloatField( blank=True, null=True)
     
-    sc_pos_gse_z = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    sc_pos_gse_z = models.FloatField( blank=True, null=True)
     
-    sc_pos_gsm_x = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    sc_pos_gsm_x = models.FloatField( blank=True, null=True)
     
-    sc_pos_gsm_y = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    sc_pos_gsm_y = models.FloatField( blank=True, null=True)
     
-    sc_pos_gsm_z = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    sc_pos_gsm_z = models.FloatField( blank=True, null=True)
     
     reg = models.PositiveSmallIntegerField( blank=True, null=True)
     
     gap_flag = models.IntegerField( blank=True, null=True)
-    
-    label_pos_gse = models.TextField( blank=True, null=True)
-    
-    label_pos_gsm = models.TextField( blank=True, null=True)
-    
-    cartesian = models.TextField( blank=True, null=True)
     
 
     file_name = models.CharField(max_length=100)

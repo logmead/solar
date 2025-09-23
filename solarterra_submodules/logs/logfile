@@ -229,3 +229,318 @@
 23:02:29 21.09.2025    [OK]  All CDF files stored successfully in /spool/data/WIND/WI/OR/PRE/v01
 23:02:29 21.09.2025    [OK]  Match file WIND_WI_OR_PRE_v01_matchfile.json loaded successfully
 23:02:29 21.09.2025    [OK]  Dataset WIND_WI_OR_PRE_v01 updated with global attributes from match file
+10:47:27 22.09.2025    [START]  Processing upload for ACE_AC_H0_MFI_v01_u2025-09-09T13-45-00.zip and ACE_AC_H0_MFI_v01_matchfile.json. Target dataset is: ACE_AC_H0_MFI_v01, upload tag: 2025-09-09T13-45-00
+10:47:27 22.09.2025    [CREATED]  Dataset instance created for ACE_AC_H0_MFI_v01
+10:47:31 22.09.2025    [CREATED]  Created dataset directory: /spool/data/ACE/AC/H0/MFI/v01
+10:47:31 22.09.2025    [OK]  No collisions found for dataset ACE_AC_H0_MFI_v01, proceeding to storing files
+10:47:35 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/ACE/AC/H0/MFI/v01
+10:47:35 22.09.2025    [OK]  Match file ACE_AC_H0_MFI_v01_matchfile.json loaded successfully
+10:47:35 22.09.2025    [OK]  Dataset ACE_AC_H0_MFI_v01 updated with global attributes from match file
+10:47:36 22.09.2025    [START]  Processing upload for ACE_AC_OR_SSC_v01_u2025-09-09T13-49-00.zip and ACE_AC_OR_SSC_v01_matchfile.json. Target dataset is: ACE_AC_OR_SSC_v01, upload tag: 2025-09-09T13-49-00
+10:47:36 22.09.2025    [CREATED]  Dataset instance created for ACE_AC_OR_SSC_v01
+10:47:36 22.09.2025    [CREATED]  Created dataset directory: /spool/data/ACE/AC/OR/SSC/v01
+10:47:36 22.09.2025    [OK]  No collisions found for dataset ACE_AC_OR_SSC_v01, proceeding to storing files
+10:47:36 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/ACE/AC/OR/SSC/v01
+10:47:36 22.09.2025    [OK]  Match file ACE_AC_OR_SSC_v01_matchfile.json loaded successfully
+10:47:36 22.09.2025    [OK]  Dataset ACE_AC_OR_SSC_v01 updated with global attributes from match file
+10:47:37 22.09.2025    [START]  Processing upload for ACE_AC_H0_SWE_v01_u2025-09-09T13-47-00.zip and ACE_AC_H0_SWE_v01_matchfile.json. Target dataset is: ACE_AC_H0_SWE_v01, upload tag: 2025-09-09T13-47-00
+10:47:37 22.09.2025    [CREATED]  Dataset instance created for ACE_AC_H0_SWE_v01
+10:47:38 22.09.2025    [CREATED]  Created dataset directory: /spool/data/ACE/AC/H0/SWE/v01
+10:47:38 22.09.2025    [OK]  No collisions found for dataset ACE_AC_H0_SWE_v01, proceeding to storing files
+10:47:40 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/ACE/AC/H0/SWE/v01
+10:47:40 22.09.2025    [OK]  Match file ACE_AC_H0_SWE_v01_matchfile.json loaded successfully
+10:47:40 22.09.2025    [OK]  Dataset ACE_AC_H0_SWE_v01 updated with global attributes from match file
+10:47:41 22.09.2025    [START]  Processing upload for DSCOVR_DSCOVR_ORBIT_PRE_v01_u2025-09-09T13-53-00.zip and DSCOVR_DSCOVR_ORBIT_PRE_v01_matchfile.json. Target dataset is: DSCOVR_DSCOVR_ORBIT_PRE_v01, upload tag: 2025-09-09T13-53-00
+10:47:41 22.09.2025    [CREATED]  Dataset instance created for DSCOVR_DSCOVR_ORBIT_PRE_v01
+10:47:42 22.09.2025    [CREATED]  Created dataset directory: /spool/data/DSCOVR/DSCOVR/ORBIT/PRE/v01
+10:47:42 22.09.2025    [OK]  No collisions found for dataset DSCOVR_DSCOVR_ORBIT_PRE_v01, proceeding to storing files
+10:47:43 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/DSCOVR/DSCOVR/ORBIT/PRE/v01
+10:47:44 22.09.2025    [OK]  Match file DSCOVR_DSCOVR_ORBIT_PRE_v01_matchfile.json loaded successfully
+10:47:44 22.09.2025    [OK]  Dataset DSCOVR_DSCOVR_ORBIT_PRE_v01 updated with global attributes from match file
+10:47:45 22.09.2025    [START]  Processing upload for DSCOVR_DSCOVR_H0_MAG_v01_u2025-09-09T13-52-00.zip and DSCOVR_DSCOVR_H0_MAG_v01_matchfile.json. Target dataset is: DSCOVR_DSCOVR_H0_MAG_v01, upload tag: 2025-09-09T13-52-00
+10:47:45 22.09.2025    [CREATED]  Dataset instance created for DSCOVR_DSCOVR_H0_MAG_v01
+10:48:07 22.09.2025    [CREATED]  Created dataset directory: /spool/data/DSCOVR/DSCOVR/H0/MAG/v01
+10:48:07 22.09.2025    [OK]  No collisions found for dataset DSCOVR_DSCOVR_H0_MAG_v01, proceeding to storing files
+10:48:11 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/DSCOVR/DSCOVR/H0/MAG/v01
+10:48:12 22.09.2025    [OK]  Match file DSCOVR_DSCOVR_H0_MAG_v01_matchfile.json loaded successfully
+10:48:12 22.09.2025    [OK]  Dataset DSCOVR_DSCOVR_H0_MAG_v01 updated with global attributes from match file
+10:48:13 22.09.2025    [START]  Processing upload for INTERBALL_IT_K0_ELE_v01_u2025-09-09T14-01-00.zip and INTERBALL_IT_K0_ELE_v01_matchfile.json. Target dataset is: INTERBALL_IT_K0_ELE_v01, upload tag: 2025-09-09T14-01-00
+10:48:13 22.09.2025    [CREATED]  Dataset instance created for INTERBALL_IT_K0_ELE_v01
+10:48:13 22.09.2025    [CREATED]  Created dataset directory: /spool/data/INTERBALL/IT/K0/ELE/v01
+10:48:13 22.09.2025    [OK]  No collisions found for dataset INTERBALL_IT_K0_ELE_v01, proceeding to storing files
+10:48:14 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/INTERBALL/IT/K0/ELE/v01
+10:48:14 22.09.2025    [OK]  Match file INTERBALL_IT_K0_ELE_v01_matchfile.json loaded successfully
+10:48:14 22.09.2025    [OK]  Dataset INTERBALL_IT_K0_ELE_v01 updated with global attributes from match file
+10:48:15 22.09.2025    [START]  Processing upload for INTERBALL_IT_K0_MFI_v01_u2025-09-09T14-02-00.zip and INTERBALL_IT_K0_MFI_v01_matchfile.json. Target dataset is: INTERBALL_IT_K0_MFI_v01, upload tag: 2025-09-09T14-02-00
+10:48:15 22.09.2025    [CREATED]  Dataset instance created for INTERBALL_IT_K0_MFI_v01
+10:48:15 22.09.2025    [CREATED]  Created dataset directory: /spool/data/INTERBALL/IT/K0/MFI/v01
+10:48:15 22.09.2025    [OK]  No collisions found for dataset INTERBALL_IT_K0_MFI_v01, proceeding to storing files
+10:48:16 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/INTERBALL/IT/K0/MFI/v01
+10:48:16 22.09.2025    [OK]  Match file INTERBALL_IT_K0_MFI_v01_matchfile.json loaded successfully
+10:48:16 22.09.2025    [OK]  Dataset INTERBALL_IT_K0_MFI_v01 updated with global attributes from match file
+10:48:17 22.09.2025    [START]  Processing upload for INTERBALL_IT_K0_VDP_v01_u2025-09-09T14-02-00.zip and INTERBALL_IT_K0_VDP_v01_matchfile.json. Target dataset is: INTERBALL_IT_K0_VDP_v01, upload tag: 2025-09-09T14-02-00
+10:48:17 22.09.2025    [CREATED]  Dataset instance created for INTERBALL_IT_K0_VDP_v01
+10:48:17 22.09.2025    [CREATED]  Created dataset directory: /spool/data/INTERBALL/IT/K0/VDP/v01
+10:48:17 22.09.2025    [OK]  No collisions found for dataset INTERBALL_IT_K0_VDP_v01, proceeding to storing files
+10:48:17 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/INTERBALL/IT/K0/VDP/v01
+10:48:17 22.09.2025    [OK]  Match file INTERBALL_IT_K0_VDP_v01_matchfile.json loaded successfully
+10:48:17 22.09.2025    [OK]  Dataset INTERBALL_IT_K0_VDP_v01 updated with global attributes from match file
+10:48:18 22.09.2025    [START]  Processing upload for INTERBALL_IT_OR_DEF_v01_u2025-09-09T14-04-00.zip and INTERBALL_IT_OR_DEF_v01_matchfile.json. Target dataset is: INTERBALL_IT_OR_DEF_v01, upload tag: 2025-09-09T14-04-00
+10:48:18 22.09.2025    [CREATED]  Dataset instance created for INTERBALL_IT_OR_DEF_v01
+10:48:18 22.09.2025    [CREATED]  Created dataset directory: /spool/data/INTERBALL/IT/OR/DEF/v01
+10:48:18 22.09.2025    [OK]  No collisions found for dataset INTERBALL_IT_OR_DEF_v01, proceeding to storing files
+10:48:19 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/INTERBALL/IT/OR/DEF/v01
+10:48:19 22.09.2025    [OK]  Match file INTERBALL_IT_OR_DEF_v01_matchfile.json loaded successfully
+10:48:19 22.09.2025    [OK]  Dataset INTERBALL_IT_OR_DEF_v01 updated with global attributes from match file
+10:48:20 22.09.2025    [START]  Processing upload for SPEKTRR_SPR_H1_BMSW_v01_u2025-09-09T14-04-00.zip and SPEKTRR_SPR_H1_BMSW_v01_matchfile.json. Target dataset is: SPEKTRR_SPR_H1_BMSW_v01, upload tag: 2025-09-09T14-04-00
+10:48:20 22.09.2025    [CREATED]  Dataset instance created for SPEKTRR_SPR_H1_BMSW_v01
+10:48:21 22.09.2025    [CREATED]  Created dataset directory: /spool/data/SPEKTRR/SPR/H1/BMSW/v01
+10:48:21 22.09.2025    [OK]  No collisions found for dataset SPEKTRR_SPR_H1_BMSW_v01, proceeding to storing files
+10:48:21 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/SPEKTRR/SPR/H1/BMSW/v01
+10:48:21 22.09.2025    [OK]  Match file SPEKTRR_SPR_H1_BMSW_v01_matchfile.json loaded successfully
+10:48:21 22.09.2025    [OK]  Dataset SPEKTRR_SPR_H1_BMSW_v01 updated with global attributes from match file
+10:48:22 22.09.2025    [START]  Processing upload for SPEKTRR_SPR_K0_BMSW_v01_u2025-09-09T14-05-00.zip and SPEKTRR_SPR_K0_BMSW_v01_matchfile.json. Target dataset is: SPEKTRR_SPR_K0_BMSW_v01, upload tag: 2025-09-09T14-05-00
+10:48:22 22.09.2025    [CREATED]  Dataset instance created for SPEKTRR_SPR_K0_BMSW_v01
+10:48:22 22.09.2025    [CREATED]  Created dataset directory: /spool/data/SPEKTRR/SPR/K0/BMSW/v01
+10:48:22 22.09.2025    [OK]  No collisions found for dataset SPEKTRR_SPR_K0_BMSW_v01, proceeding to storing files
+10:48:23 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/SPEKTRR/SPR/K0/BMSW/v01
+10:48:23 22.09.2025    [OK]  Match file SPEKTRR_SPR_K0_BMSW_v01_matchfile.json loaded successfully
+10:48:23 22.09.2025    [OK]  Dataset SPEKTRR_SPR_K0_BMSW_v01 updated with global attributes from match file
+10:48:24 22.09.2025    [START]  Processing upload for SPEKTRR_SPR_OR_DEF_v01_u2025-09-09T14-06-00.zip and SPEKTRR_SPR_OR_DEF_v01_matchfile.json. Target dataset is: SPEKTRR_SPR_OR_DEF_v01, upload tag: 2025-09-09T14-06-00
+10:48:24 22.09.2025    [CREATED]  Dataset instance created for SPEKTRR_SPR_OR_DEF_v01
+10:48:24 22.09.2025    [CREATED]  Created dataset directory: /spool/data/SPEKTRR/SPR/OR/DEF/v01
+10:48:24 22.09.2025    [OK]  No collisions found for dataset SPEKTRR_SPR_OR_DEF_v01, proceeding to storing files
+10:48:25 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/SPEKTRR/SPR/OR/DEF/v01
+10:48:25 22.09.2025    [OK]  Match file SPEKTRR_SPR_OR_DEF_v01_matchfile.json loaded successfully
+10:48:25 22.09.2025    [OK]  Dataset SPEKTRR_SPR_OR_DEF_v01 updated with global attributes from match file
+10:48:26 22.09.2025    [START]  Processing upload for WIND_WI_H0_MFI_v01_u2025-09-09T13-56-00.zip and WIND_WI_H0_MFI_v01_matchfile.json. Target dataset is: WIND_WI_H0_MFI_v01, upload tag: 2025-09-09T13-56-00
+10:48:26 22.09.2025    [CREATED]  Dataset instance created for WIND_WI_H0_MFI_v01
+10:48:47 22.09.2025    [CREATED]  Created dataset directory: /spool/data/WIND/WI/H0/MFI/v01
+10:48:47 22.09.2025    [OK]  No collisions found for dataset WIND_WI_H0_MFI_v01, proceeding to storing files
+10:48:53 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/WIND/WI/H0/MFI/v01
+10:48:53 22.09.2025    [OK]  Match file WIND_WI_H0_MFI_v01_matchfile.json loaded successfully
+10:48:53 22.09.2025    [OK]  Dataset WIND_WI_H0_MFI_v01 updated with global attributes from match file
+10:48:57 22.09.2025    [START]  Processing upload for WIND_WI_K0_SWE_v01_u2025-09-09T13-58-00.zip and WIND_WI_K0_SWE_v01_matchfile.json. Target dataset is: WIND_WI_K0_SWE_v01, upload tag: 2025-09-09T13-58-00
+10:48:57 22.09.2025    [CREATED]  Dataset instance created for WIND_WI_K0_SWE_v01
+10:48:58 22.09.2025    [CREATED]  Created dataset directory: /spool/data/WIND/WI/K0/SWE/v01
+10:48:58 22.09.2025    [OK]  No collisions found for dataset WIND_WI_K0_SWE_v01, proceeding to storing files
+10:49:00 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/WIND/WI/K0/SWE/v01
+10:49:00 22.09.2025    [OK]  Match file WIND_WI_K0_SWE_v01_matchfile.json loaded successfully
+10:49:00 22.09.2025    [OK]  Dataset WIND_WI_K0_SWE_v01 updated with global attributes from match file
+10:49:02 22.09.2025    [START]  Processing upload for WIND_WI_OR_PRE_v01_u2025-09-09T14-00-00.zip and WIND_WI_OR_PRE_v01_matchfile.json. Target dataset is: WIND_WI_OR_PRE_v01, upload tag: 2025-09-09T14-00-00
+10:49:02 22.09.2025    [CREATED]  Dataset instance created for WIND_WI_OR_PRE_v01
+10:49:03 22.09.2025    [CREATED]  Created dataset directory: /spool/data/WIND/WI/OR/PRE/v01
+10:49:03 22.09.2025    [OK]  No collisions found for dataset WIND_WI_OR_PRE_v01, proceeding to storing files
+10:49:05 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/WIND/WI/OR/PRE/v01
+10:49:05 22.09.2025    [OK]  Match file WIND_WI_OR_PRE_v01_matchfile.json loaded successfully
+10:49:06 22.09.2025    [OK]  Dataset WIND_WI_OR_PRE_v01 updated with global attributes from match file
+19:57:47 22.09.2025    [START]  Processing upload for ACE_AC_H0_MFI_v01_u2025-09-09T13-45-00.zip and ACE_AC_H0_MFI_v01_matchfile.json. Target dataset is: ACE_AC_H0_MFI_v01, upload tag: 2025-09-09T13-45-00
+19:57:47 22.09.2025    [CREATED]  Dataset instance created for ACE_AC_H0_MFI_v01
+19:57:51 22.09.2025    [CREATED]  Created dataset directory: /spool/data/ACE/AC/H0/MFI/v01
+19:57:51 22.09.2025    [OK]  No collisions found for dataset ACE_AC_H0_MFI_v01, proceeding to storing files
+19:57:53 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/ACE/AC/H0/MFI/v01
+19:57:53 22.09.2025    [OK]  Match file ACE_AC_H0_MFI_v01_matchfile.json loaded successfully
+19:57:53 22.09.2025    [OK]  Dataset ACE_AC_H0_MFI_v01 updated with global attributes from match file
+19:57:54 22.09.2025    [START]  Processing upload for ACE_AC_OR_SSC_v01_u2025-09-09T13-49-00.zip and ACE_AC_OR_SSC_v01_matchfile.json. Target dataset is: ACE_AC_OR_SSC_v01, upload tag: 2025-09-09T13-49-00
+19:57:54 22.09.2025    [CREATED]  Dataset instance created for ACE_AC_OR_SSC_v01
+19:57:54 22.09.2025    [CREATED]  Created dataset directory: /spool/data/ACE/AC/OR/SSC/v01
+19:57:54 22.09.2025    [OK]  No collisions found for dataset ACE_AC_OR_SSC_v01, proceeding to storing files
+19:57:54 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/ACE/AC/OR/SSC/v01
+19:57:54 22.09.2025    [OK]  Match file ACE_AC_OR_SSC_v01_matchfile.json loaded successfully
+19:57:54 22.09.2025    [OK]  Dataset ACE_AC_OR_SSC_v01 updated with global attributes from match file
+19:57:54 22.09.2025    [START]  Processing upload for ACE_AC_H0_SWE_v01_u2025-09-09T13-47-00.zip and ACE_AC_H0_SWE_v01_matchfile.json. Target dataset is: ACE_AC_H0_SWE_v01, upload tag: 2025-09-09T13-47-00
+19:57:54 22.09.2025    [CREATED]  Dataset instance created for ACE_AC_H0_SWE_v01
+19:57:55 22.09.2025    [CREATED]  Created dataset directory: /spool/data/ACE/AC/H0/SWE/v01
+19:57:55 22.09.2025    [OK]  No collisions found for dataset ACE_AC_H0_SWE_v01, proceeding to storing files
+19:57:57 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/ACE/AC/H0/SWE/v01
+19:57:57 22.09.2025    [OK]  Match file ACE_AC_H0_SWE_v01_matchfile.json loaded successfully
+19:57:57 22.09.2025    [OK]  Dataset ACE_AC_H0_SWE_v01 updated with global attributes from match file
+19:57:58 22.09.2025    [START]  Processing upload for DSCOVR_DSCOVR_ORBIT_PRE_v01_u2025-09-09T13-53-00.zip and DSCOVR_DSCOVR_ORBIT_PRE_v01_matchfile.json. Target dataset is: DSCOVR_DSCOVR_ORBIT_PRE_v01, upload tag: 2025-09-09T13-53-00
+19:57:58 22.09.2025    [CREATED]  Dataset instance created for DSCOVR_DSCOVR_ORBIT_PRE_v01
+19:57:59 22.09.2025    [CREATED]  Created dataset directory: /spool/data/DSCOVR/DSCOVR/ORBIT/PRE/v01
+19:57:59 22.09.2025    [OK]  No collisions found for dataset DSCOVR_DSCOVR_ORBIT_PRE_v01, proceeding to storing files
+19:58:00 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/DSCOVR/DSCOVR/ORBIT/PRE/v01
+19:58:00 22.09.2025    [OK]  Match file DSCOVR_DSCOVR_ORBIT_PRE_v01_matchfile.json loaded successfully
+19:58:00 22.09.2025    [OK]  Dataset DSCOVR_DSCOVR_ORBIT_PRE_v01 updated with global attributes from match file
+19:58:00 22.09.2025    [START]  Processing upload for DSCOVR_DSCOVR_H0_MAG_v01_u2025-09-09T13-52-00.zip and DSCOVR_DSCOVR_H0_MAG_v01_matchfile.json. Target dataset is: DSCOVR_DSCOVR_H0_MAG_v01, upload tag: 2025-09-09T13-52-00
+19:58:00 22.09.2025    [CREATED]  Dataset instance created for DSCOVR_DSCOVR_H0_MAG_v01
+19:58:22 22.09.2025    [CREATED]  Created dataset directory: /spool/data/DSCOVR/DSCOVR/H0/MAG/v01
+19:58:22 22.09.2025    [OK]  No collisions found for dataset DSCOVR_DSCOVR_H0_MAG_v01, proceeding to storing files
+19:58:27 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/DSCOVR/DSCOVR/H0/MAG/v01
+19:58:27 22.09.2025    [OK]  Match file DSCOVR_DSCOVR_H0_MAG_v01_matchfile.json loaded successfully
+19:58:27 22.09.2025    [OK]  Dataset DSCOVR_DSCOVR_H0_MAG_v01 updated with global attributes from match file
+19:58:28 22.09.2025    [START]  Processing upload for INTERBALL_IT_K0_ELE_v01_u2025-09-09T14-01-00.zip and INTERBALL_IT_K0_ELE_v01_matchfile.json. Target dataset is: INTERBALL_IT_K0_ELE_v01, upload tag: 2025-09-09T14-01-00
+19:58:28 22.09.2025    [CREATED]  Dataset instance created for INTERBALL_IT_K0_ELE_v01
+19:58:29 22.09.2025    [CREATED]  Created dataset directory: /spool/data/INTERBALL/IT/K0/ELE/v01
+19:58:29 22.09.2025    [OK]  No collisions found for dataset INTERBALL_IT_K0_ELE_v01, proceeding to storing files
+19:58:29 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/INTERBALL/IT/K0/ELE/v01
+19:58:29 22.09.2025    [OK]  Match file INTERBALL_IT_K0_ELE_v01_matchfile.json loaded successfully
+19:58:29 22.09.2025    [OK]  Dataset INTERBALL_IT_K0_ELE_v01 updated with global attributes from match file
+19:58:30 22.09.2025    [START]  Processing upload for INTERBALL_IT_K0_MFI_v01_u2025-09-09T14-02-00.zip and INTERBALL_IT_K0_MFI_v01_matchfile.json. Target dataset is: INTERBALL_IT_K0_MFI_v01, upload tag: 2025-09-09T14-02-00
+19:58:30 22.09.2025    [CREATED]  Dataset instance created for INTERBALL_IT_K0_MFI_v01
+19:58:31 22.09.2025    [CREATED]  Created dataset directory: /spool/data/INTERBALL/IT/K0/MFI/v01
+19:58:31 22.09.2025    [OK]  No collisions found for dataset INTERBALL_IT_K0_MFI_v01, proceeding to storing files
+19:58:31 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/INTERBALL/IT/K0/MFI/v01
+19:58:31 22.09.2025    [OK]  Match file INTERBALL_IT_K0_MFI_v01_matchfile.json loaded successfully
+19:58:31 22.09.2025    [OK]  Dataset INTERBALL_IT_K0_MFI_v01 updated with global attributes from match file
+19:58:33 22.09.2025    [START]  Processing upload for INTERBALL_IT_K0_VDP_v01_u2025-09-09T14-02-00.zip and INTERBALL_IT_K0_VDP_v01_matchfile.json. Target dataset is: INTERBALL_IT_K0_VDP_v01, upload tag: 2025-09-09T14-02-00
+19:58:33 22.09.2025    [CREATED]  Dataset instance created for INTERBALL_IT_K0_VDP_v01
+19:58:33 22.09.2025    [CREATED]  Created dataset directory: /spool/data/INTERBALL/IT/K0/VDP/v01
+19:58:33 22.09.2025    [OK]  No collisions found for dataset INTERBALL_IT_K0_VDP_v01, proceeding to storing files
+19:58:33 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/INTERBALL/IT/K0/VDP/v01
+19:58:33 22.09.2025    [OK]  Match file INTERBALL_IT_K0_VDP_v01_matchfile.json loaded successfully
+19:58:33 22.09.2025    [OK]  Dataset INTERBALL_IT_K0_VDP_v01 updated with global attributes from match file
+19:58:34 22.09.2025    [START]  Processing upload for INTERBALL_IT_OR_DEF_v01_u2025-09-09T14-04-00.zip and INTERBALL_IT_OR_DEF_v01_matchfile.json. Target dataset is: INTERBALL_IT_OR_DEF_v01, upload tag: 2025-09-09T14-04-00
+19:58:34 22.09.2025    [CREATED]  Dataset instance created for INTERBALL_IT_OR_DEF_v01
+19:58:34 22.09.2025    [CREATED]  Created dataset directory: /spool/data/INTERBALL/IT/OR/DEF/v01
+19:58:34 22.09.2025    [OK]  No collisions found for dataset INTERBALL_IT_OR_DEF_v01, proceeding to storing files
+19:58:35 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/INTERBALL/IT/OR/DEF/v01
+19:58:35 22.09.2025    [OK]  Match file INTERBALL_IT_OR_DEF_v01_matchfile.json loaded successfully
+19:58:35 22.09.2025    [OK]  Dataset INTERBALL_IT_OR_DEF_v01 updated with global attributes from match file
+19:58:36 22.09.2025    [START]  Processing upload for SPEKTRR_SPR_H1_BMSW_v01_u2025-09-09T14-04-00.zip and SPEKTRR_SPR_H1_BMSW_v01_matchfile.json. Target dataset is: SPEKTRR_SPR_H1_BMSW_v01, upload tag: 2025-09-09T14-04-00
+19:58:36 22.09.2025    [CREATED]  Dataset instance created for SPEKTRR_SPR_H1_BMSW_v01
+19:58:36 22.09.2025    [CREATED]  Created dataset directory: /spool/data/SPEKTRR/SPR/H1/BMSW/v01
+19:58:36 22.09.2025    [OK]  No collisions found for dataset SPEKTRR_SPR_H1_BMSW_v01, proceeding to storing files
+19:58:37 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/SPEKTRR/SPR/H1/BMSW/v01
+19:58:37 22.09.2025    [OK]  Match file SPEKTRR_SPR_H1_BMSW_v01_matchfile.json loaded successfully
+19:58:37 22.09.2025    [OK]  Dataset SPEKTRR_SPR_H1_BMSW_v01 updated with global attributes from match file
+19:58:38 22.09.2025    [START]  Processing upload for SPEKTRR_SPR_K0_BMSW_v01_u2025-09-09T14-05-00.zip and SPEKTRR_SPR_K0_BMSW_v01_matchfile.json. Target dataset is: SPEKTRR_SPR_K0_BMSW_v01, upload tag: 2025-09-09T14-05-00
+19:58:38 22.09.2025    [CREATED]  Dataset instance created for SPEKTRR_SPR_K0_BMSW_v01
+19:58:38 22.09.2025    [CREATED]  Created dataset directory: /spool/data/SPEKTRR/SPR/K0/BMSW/v01
+19:58:38 22.09.2025    [OK]  No collisions found for dataset SPEKTRR_SPR_K0_BMSW_v01, proceeding to storing files
+19:58:38 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/SPEKTRR/SPR/K0/BMSW/v01
+19:58:38 22.09.2025    [OK]  Match file SPEKTRR_SPR_K0_BMSW_v01_matchfile.json loaded successfully
+19:58:38 22.09.2025    [OK]  Dataset SPEKTRR_SPR_K0_BMSW_v01 updated with global attributes from match file
+19:58:39 22.09.2025    [START]  Processing upload for SPEKTRR_SPR_OR_DEF_v01_u2025-09-09T14-06-00.zip and SPEKTRR_SPR_OR_DEF_v01_matchfile.json. Target dataset is: SPEKTRR_SPR_OR_DEF_v01, upload tag: 2025-09-09T14-06-00
+19:58:39 22.09.2025    [CREATED]  Dataset instance created for SPEKTRR_SPR_OR_DEF_v01
+19:58:40 22.09.2025    [CREATED]  Created dataset directory: /spool/data/SPEKTRR/SPR/OR/DEF/v01
+19:58:40 22.09.2025    [OK]  No collisions found for dataset SPEKTRR_SPR_OR_DEF_v01, proceeding to storing files
+19:58:40 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/SPEKTRR/SPR/OR/DEF/v01
+19:58:40 22.09.2025    [OK]  Match file SPEKTRR_SPR_OR_DEF_v01_matchfile.json loaded successfully
+19:58:40 22.09.2025    [OK]  Dataset SPEKTRR_SPR_OR_DEF_v01 updated with global attributes from match file
+19:58:41 22.09.2025    [START]  Processing upload for WIND_WI_H0_MFI_v01_u2025-09-09T13-56-00.zip and WIND_WI_H0_MFI_v01_matchfile.json. Target dataset is: WIND_WI_H0_MFI_v01, upload tag: 2025-09-09T13-56-00
+19:58:41 22.09.2025    [CREATED]  Dataset instance created for WIND_WI_H0_MFI_v01
+19:59:03 22.09.2025    [CREATED]  Created dataset directory: /spool/data/WIND/WI/H0/MFI/v01
+19:59:03 22.09.2025    [OK]  No collisions found for dataset WIND_WI_H0_MFI_v01, proceeding to storing files
+19:59:08 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/WIND/WI/H0/MFI/v01
+19:59:09 22.09.2025    [OK]  Match file WIND_WI_H0_MFI_v01_matchfile.json loaded successfully
+19:59:09 22.09.2025    [OK]  Dataset WIND_WI_H0_MFI_v01 updated with global attributes from match file
+19:59:12 22.09.2025    [START]  Processing upload for WIND_WI_K0_SWE_v01_u2025-09-09T13-58-00.zip and WIND_WI_K0_SWE_v01_matchfile.json. Target dataset is: WIND_WI_K0_SWE_v01, upload tag: 2025-09-09T13-58-00
+19:59:12 22.09.2025    [CREATED]  Dataset instance created for WIND_WI_K0_SWE_v01
+19:59:13 22.09.2025    [CREATED]  Created dataset directory: /spool/data/WIND/WI/K0/SWE/v01
+19:59:13 22.09.2025    [OK]  No collisions found for dataset WIND_WI_K0_SWE_v01, proceeding to storing files
+19:59:15 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/WIND/WI/K0/SWE/v01
+19:59:16 22.09.2025    [OK]  Match file WIND_WI_K0_SWE_v01_matchfile.json loaded successfully
+19:59:16 22.09.2025    [OK]  Dataset WIND_WI_K0_SWE_v01 updated with global attributes from match file
+19:59:17 22.09.2025    [START]  Processing upload for WIND_WI_OR_PRE_v01_u2025-09-09T14-00-00.zip and WIND_WI_OR_PRE_v01_matchfile.json. Target dataset is: WIND_WI_OR_PRE_v01, upload tag: 2025-09-09T14-00-00
+19:59:17 22.09.2025    [CREATED]  Dataset instance created for WIND_WI_OR_PRE_v01
+19:59:18 22.09.2025    [CREATED]  Created dataset directory: /spool/data/WIND/WI/OR/PRE/v01
+19:59:18 22.09.2025    [OK]  No collisions found for dataset WIND_WI_OR_PRE_v01, proceeding to storing files
+19:59:20 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/WIND/WI/OR/PRE/v01
+19:59:20 22.09.2025    [OK]  Match file WIND_WI_OR_PRE_v01_matchfile.json loaded successfully
+19:59:20 22.09.2025    [OK]  Dataset WIND_WI_OR_PRE_v01 updated with global attributes from match file
+20:55:04 22.09.2025    [START]  Processing upload for ACE_AC_H0_MFI_v01_u2025-09-09T13-45-00.zip and ACE_AC_H0_MFI_v01_matchfile.json. Target dataset is: ACE_AC_H0_MFI_v01, upload tag: 2025-09-09T13-45-00
+20:55:04 22.09.2025    [CREATED]  Dataset instance created for ACE_AC_H0_MFI_v01
+20:55:08 22.09.2025    [CREATED]  Created dataset directory: /spool/data/ACE/AC/H0/MFI/v01
+20:55:08 22.09.2025    [OK]  No collisions found for dataset ACE_AC_H0_MFI_v01, proceeding to storing files
+20:55:10 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/ACE/AC/H0/MFI/v01
+20:55:10 22.09.2025    [OK]  Match file ACE_AC_H0_MFI_v01_matchfile.json loaded successfully
+20:55:10 22.09.2025    [OK]  Dataset ACE_AC_H0_MFI_v01 updated with global attributes from match file
+20:55:11 22.09.2025    [START]  Processing upload for ACE_AC_OR_SSC_v01_u2025-09-09T13-49-00.zip and ACE_AC_OR_SSC_v01_matchfile.json. Target dataset is: ACE_AC_OR_SSC_v01, upload tag: 2025-09-09T13-49-00
+20:55:11 22.09.2025    [CREATED]  Dataset instance created for ACE_AC_OR_SSC_v01
+20:55:11 22.09.2025    [CREATED]  Created dataset directory: /spool/data/ACE/AC/OR/SSC/v01
+20:55:11 22.09.2025    [OK]  No collisions found for dataset ACE_AC_OR_SSC_v01, proceeding to storing files
+20:55:11 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/ACE/AC/OR/SSC/v01
+20:55:11 22.09.2025    [OK]  Match file ACE_AC_OR_SSC_v01_matchfile.json loaded successfully
+20:55:11 22.09.2025    [OK]  Dataset ACE_AC_OR_SSC_v01 updated with global attributes from match file
+20:55:12 22.09.2025    [START]  Processing upload for ACE_AC_H0_SWE_v01_u2025-09-09T13-47-00.zip and ACE_AC_H0_SWE_v01_matchfile.json. Target dataset is: ACE_AC_H0_SWE_v01, upload tag: 2025-09-09T13-47-00
+20:55:12 22.09.2025    [CREATED]  Dataset instance created for ACE_AC_H0_SWE_v01
+20:55:13 22.09.2025    [CREATED]  Created dataset directory: /spool/data/ACE/AC/H0/SWE/v01
+20:55:13 22.09.2025    [OK]  No collisions found for dataset ACE_AC_H0_SWE_v01, proceeding to storing files
+20:55:15 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/ACE/AC/H0/SWE/v01
+20:55:15 22.09.2025    [OK]  Match file ACE_AC_H0_SWE_v01_matchfile.json loaded successfully
+20:55:15 22.09.2025    [OK]  Dataset ACE_AC_H0_SWE_v01 updated with global attributes from match file
+20:55:16 22.09.2025    [START]  Processing upload for DSCOVR_DSCOVR_ORBIT_PRE_v01_u2025-09-09T13-53-00.zip and DSCOVR_DSCOVR_ORBIT_PRE_v01_matchfile.json. Target dataset is: DSCOVR_DSCOVR_ORBIT_PRE_v01, upload tag: 2025-09-09T13-53-00
+20:55:16 22.09.2025    [CREATED]  Dataset instance created for DSCOVR_DSCOVR_ORBIT_PRE_v01
+20:55:17 22.09.2025    [CREATED]  Created dataset directory: /spool/data/DSCOVR/DSCOVR/ORBIT/PRE/v01
+20:55:17 22.09.2025    [OK]  No collisions found for dataset DSCOVR_DSCOVR_ORBIT_PRE_v01, proceeding to storing files
+20:55:18 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/DSCOVR/DSCOVR/ORBIT/PRE/v01
+20:55:18 22.09.2025    [OK]  Match file DSCOVR_DSCOVR_ORBIT_PRE_v01_matchfile.json loaded successfully
+20:55:18 22.09.2025    [OK]  Dataset DSCOVR_DSCOVR_ORBIT_PRE_v01 updated with global attributes from match file
+20:55:19 22.09.2025    [START]  Processing upload for DSCOVR_DSCOVR_H0_MAG_v01_u2025-09-09T13-52-00.zip and DSCOVR_DSCOVR_H0_MAG_v01_matchfile.json. Target dataset is: DSCOVR_DSCOVR_H0_MAG_v01, upload tag: 2025-09-09T13-52-00
+20:55:19 22.09.2025    [CREATED]  Dataset instance created for DSCOVR_DSCOVR_H0_MAG_v01
+20:55:42 22.09.2025    [CREATED]  Created dataset directory: /spool/data/DSCOVR/DSCOVR/H0/MAG/v01
+20:55:42 22.09.2025    [OK]  No collisions found for dataset DSCOVR_DSCOVR_H0_MAG_v01, proceeding to storing files
+20:55:47 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/DSCOVR/DSCOVR/H0/MAG/v01
+20:55:47 22.09.2025    [OK]  Match file DSCOVR_DSCOVR_H0_MAG_v01_matchfile.json loaded successfully
+20:55:47 22.09.2025    [OK]  Dataset DSCOVR_DSCOVR_H0_MAG_v01 updated with global attributes from match file
+20:55:48 22.09.2025    [START]  Processing upload for INTERBALL_IT_K0_ELE_v01_u2025-09-09T14-01-00.zip and INTERBALL_IT_K0_ELE_v01_matchfile.json. Target dataset is: INTERBALL_IT_K0_ELE_v01, upload tag: 2025-09-09T14-01-00
+20:55:48 22.09.2025    [CREATED]  Dataset instance created for INTERBALL_IT_K0_ELE_v01
+20:55:48 22.09.2025    [CREATED]  Created dataset directory: /spool/data/INTERBALL/IT/K0/ELE/v01
+20:55:48 22.09.2025    [OK]  No collisions found for dataset INTERBALL_IT_K0_ELE_v01, proceeding to storing files
+20:55:49 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/INTERBALL/IT/K0/ELE/v01
+20:55:49 22.09.2025    [OK]  Match file INTERBALL_IT_K0_ELE_v01_matchfile.json loaded successfully
+20:55:49 22.09.2025    [OK]  Dataset INTERBALL_IT_K0_ELE_v01 updated with global attributes from match file
+20:55:50 22.09.2025    [START]  Processing upload for INTERBALL_IT_K0_MFI_v01_u2025-09-09T14-02-00.zip and INTERBALL_IT_K0_MFI_v01_matchfile.json. Target dataset is: INTERBALL_IT_K0_MFI_v01, upload tag: 2025-09-09T14-02-00
+20:55:50 22.09.2025    [CREATED]  Dataset instance created for INTERBALL_IT_K0_MFI_v01
+20:55:50 22.09.2025    [CREATED]  Created dataset directory: /spool/data/INTERBALL/IT/K0/MFI/v01
+20:55:50 22.09.2025    [OK]  No collisions found for dataset INTERBALL_IT_K0_MFI_v01, proceeding to storing files
+20:55:51 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/INTERBALL/IT/K0/MFI/v01
+20:55:51 22.09.2025    [OK]  Match file INTERBALL_IT_K0_MFI_v01_matchfile.json loaded successfully
+20:55:51 22.09.2025    [OK]  Dataset INTERBALL_IT_K0_MFI_v01 updated with global attributes from match file
+20:55:52 22.09.2025    [START]  Processing upload for INTERBALL_IT_K0_VDP_v01_u2025-09-09T14-02-00.zip and INTERBALL_IT_K0_VDP_v01_matchfile.json. Target dataset is: INTERBALL_IT_K0_VDP_v01, upload tag: 2025-09-09T14-02-00
+20:55:52 22.09.2025    [CREATED]  Dataset instance created for INTERBALL_IT_K0_VDP_v01
+20:55:52 22.09.2025    [CREATED]  Created dataset directory: /spool/data/INTERBALL/IT/K0/VDP/v01
+20:55:52 22.09.2025    [OK]  No collisions found for dataset INTERBALL_IT_K0_VDP_v01, proceeding to storing files
+20:55:52 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/INTERBALL/IT/K0/VDP/v01
+20:55:52 22.09.2025    [OK]  Match file INTERBALL_IT_K0_VDP_v01_matchfile.json loaded successfully
+20:55:52 22.09.2025    [OK]  Dataset INTERBALL_IT_K0_VDP_v01 updated with global attributes from match file
+20:55:53 22.09.2025    [START]  Processing upload for INTERBALL_IT_OR_DEF_v01_u2025-09-09T14-04-00.zip and INTERBALL_IT_OR_DEF_v01_matchfile.json. Target dataset is: INTERBALL_IT_OR_DEF_v01, upload tag: 2025-09-09T14-04-00
+20:55:53 22.09.2025    [CREATED]  Dataset instance created for INTERBALL_IT_OR_DEF_v01
+20:55:53 22.09.2025    [CREATED]  Created dataset directory: /spool/data/INTERBALL/IT/OR/DEF/v01
+20:55:53 22.09.2025    [OK]  No collisions found for dataset INTERBALL_IT_OR_DEF_v01, proceeding to storing files
+20:55:54 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/INTERBALL/IT/OR/DEF/v01
+20:55:54 22.09.2025    [OK]  Match file INTERBALL_IT_OR_DEF_v01_matchfile.json loaded successfully
+20:55:54 22.09.2025    [OK]  Dataset INTERBALL_IT_OR_DEF_v01 updated with global attributes from match file
+20:55:55 22.09.2025    [START]  Processing upload for SPEKTRR_SPR_H1_BMSW_v01_u2025-09-09T14-04-00.zip and SPEKTRR_SPR_H1_BMSW_v01_matchfile.json. Target dataset is: SPEKTRR_SPR_H1_BMSW_v01, upload tag: 2025-09-09T14-04-00
+20:55:55 22.09.2025    [CREATED]  Dataset instance created for SPEKTRR_SPR_H1_BMSW_v01
+20:55:55 22.09.2025    [CREATED]  Created dataset directory: /spool/data/SPEKTRR/SPR/H1/BMSW/v01
+20:55:55 22.09.2025    [OK]  No collisions found for dataset SPEKTRR_SPR_H1_BMSW_v01, proceeding to storing files
+20:55:56 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/SPEKTRR/SPR/H1/BMSW/v01
+20:55:56 22.09.2025    [OK]  Match file SPEKTRR_SPR_H1_BMSW_v01_matchfile.json loaded successfully
+20:55:56 22.09.2025    [OK]  Dataset SPEKTRR_SPR_H1_BMSW_v01 updated with global attributes from match file
+20:55:57 22.09.2025    [START]  Processing upload for SPEKTRR_SPR_K0_BMSW_v01_u2025-09-09T14-05-00.zip and SPEKTRR_SPR_K0_BMSW_v01_matchfile.json. Target dataset is: SPEKTRR_SPR_K0_BMSW_v01, upload tag: 2025-09-09T14-05-00
+20:55:57 22.09.2025    [CREATED]  Dataset instance created for SPEKTRR_SPR_K0_BMSW_v01
+20:55:57 22.09.2025    [CREATED]  Created dataset directory: /spool/data/SPEKTRR/SPR/K0/BMSW/v01
+20:55:57 22.09.2025    [OK]  No collisions found for dataset SPEKTRR_SPR_K0_BMSW_v01, proceeding to storing files
+20:55:57 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/SPEKTRR/SPR/K0/BMSW/v01
+20:55:57 22.09.2025    [OK]  Match file SPEKTRR_SPR_K0_BMSW_v01_matchfile.json loaded successfully
+20:55:57 22.09.2025    [OK]  Dataset SPEKTRR_SPR_K0_BMSW_v01 updated with global attributes from match file
+20:55:58 22.09.2025    [START]  Processing upload for SPEKTRR_SPR_OR_DEF_v01_u2025-09-09T14-06-00.zip and SPEKTRR_SPR_OR_DEF_v01_matchfile.json. Target dataset is: SPEKTRR_SPR_OR_DEF_v01, upload tag: 2025-09-09T14-06-00
+20:55:58 22.09.2025    [CREATED]  Dataset instance created for SPEKTRR_SPR_OR_DEF_v01
+20:55:58 22.09.2025    [CREATED]  Created dataset directory: /spool/data/SPEKTRR/SPR/OR/DEF/v01
+20:55:58 22.09.2025    [OK]  No collisions found for dataset SPEKTRR_SPR_OR_DEF_v01, proceeding to storing files
+20:55:59 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/SPEKTRR/SPR/OR/DEF/v01
+20:55:59 22.09.2025    [OK]  Match file SPEKTRR_SPR_OR_DEF_v01_matchfile.json loaded successfully
+20:55:59 22.09.2025    [OK]  Dataset SPEKTRR_SPR_OR_DEF_v01 updated with global attributes from match file
+20:55:59 22.09.2025    [START]  Processing upload for WIND_WI_H0_MFI_v01_u2025-09-09T13-56-00.zip and WIND_WI_H0_MFI_v01_matchfile.json. Target dataset is: WIND_WI_H0_MFI_v01, upload tag: 2025-09-09T13-56-00
+20:55:59 22.09.2025    [CREATED]  Dataset instance created for WIND_WI_H0_MFI_v01
+20:56:21 22.09.2025    [CREATED]  Created dataset directory: /spool/data/WIND/WI/H0/MFI/v01
+20:56:21 22.09.2025    [OK]  No collisions found for dataset WIND_WI_H0_MFI_v01, proceeding to storing files
+20:56:27 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/WIND/WI/H0/MFI/v01
+20:56:27 22.09.2025    [OK]  Match file WIND_WI_H0_MFI_v01_matchfile.json loaded successfully
+20:56:27 22.09.2025    [OK]  Dataset WIND_WI_H0_MFI_v01 updated with global attributes from match file
+20:56:30 22.09.2025    [START]  Processing upload for WIND_WI_K0_SWE_v01_u2025-09-09T13-58-00.zip and WIND_WI_K0_SWE_v01_matchfile.json. Target dataset is: WIND_WI_K0_SWE_v01, upload tag: 2025-09-09T13-58-00
+20:56:30 22.09.2025    [CREATED]  Dataset instance created for WIND_WI_K0_SWE_v01
+20:56:32 22.09.2025    [CREATED]  Created dataset directory: /spool/data/WIND/WI/K0/SWE/v01
+20:56:32 22.09.2025    [OK]  No collisions found for dataset WIND_WI_K0_SWE_v01, proceeding to storing files
+20:56:34 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/WIND/WI/K0/SWE/v01
+20:56:34 22.09.2025    [OK]  Match file WIND_WI_K0_SWE_v01_matchfile.json loaded successfully
+20:56:34 22.09.2025    [OK]  Dataset WIND_WI_K0_SWE_v01 updated with global attributes from match file
+20:56:36 22.09.2025    [START]  Processing upload for WIND_WI_OR_PRE_v01_u2025-09-09T14-00-00.zip and WIND_WI_OR_PRE_v01_matchfile.json. Target dataset is: WIND_WI_OR_PRE_v01, upload tag: 2025-09-09T14-00-00
+20:56:36 22.09.2025    [CREATED]  Dataset instance created for WIND_WI_OR_PRE_v01
+20:56:37 22.09.2025    [CREATED]  Created dataset directory: /spool/data/WIND/WI/OR/PRE/v01
+20:56:37 22.09.2025    [OK]  No collisions found for dataset WIND_WI_OR_PRE_v01, proceeding to storing files
+20:56:39 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/WIND/WI/OR/PRE/v01
+20:56:39 22.09.2025    [OK]  Match file WIND_WI_OR_PRE_v01_matchfile.json loaded successfully
+20:56:39 22.09.2025    [OK]  Dataset WIND_WI_OR_PRE_v01 updated with global attributes from match file

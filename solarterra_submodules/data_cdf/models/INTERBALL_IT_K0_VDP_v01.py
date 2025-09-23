@@ -11,7 +11,7 @@ class INTERBALL_IT_K0_VDP_v01_data(models.Model):
     
     epoch = models.BigIntegerField( blank=True, null=True)
     
-    fi = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    fi = models.FloatField( blank=True, null=True)
     
     gap_flag = models.IntegerField( blank=True, null=True)
     

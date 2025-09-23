@@ -11,13 +11,13 @@ class INTERBALL_IT_K0_ELE_v01_data(models.Model):
     
     epoch = models.BigIntegerField( blank=True, null=True)
     
-    ne = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    ne = models.FloatField( blank=True, null=True)
     
-    te = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    te = models.FloatField( blank=True, null=True)
     
-    ne1 = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    ne1 = models.FloatField( blank=True, null=True)
     
-    te1 = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    te1 = models.FloatField( blank=True, null=True)
     
     flag_el = models.PositiveSmallIntegerField( blank=True, null=True)
     

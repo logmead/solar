@@ -11,17 +11,17 @@ class SPEKTRR_SPR_H1_BMSW_v01_data(models.Model):
     
     epoch = models.BigIntegerField( blank=True, null=True)
     
-    vp = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    vp = models.FloatField( blank=True, null=True)
     
-    tp = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    tp = models.FloatField( blank=True, null=True)
     
-    np = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    np = models.FloatField( blank=True, null=True)
     
-    va = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    va = models.FloatField( blank=True, null=True)
     
-    na = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    na = models.FloatField( blank=True, null=True)
     
-    nanp = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    nanp = models.FloatField( blank=True, null=True)
     
     qual = models.PositiveSmallIntegerField( blank=True, null=True)
     

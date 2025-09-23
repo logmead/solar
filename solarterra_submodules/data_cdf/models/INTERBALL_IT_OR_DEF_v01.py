@@ -11,41 +11,31 @@ class INTERBALL_IT_OR_DEF_v01_data(models.Model):
     
     epoch = models.BigIntegerField( blank=True, null=True)
     
-    sc_pos_gse_x = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    sc_pos_gse_x = models.FloatField( blank=True, null=True)
     
-    sc_pos_gse_y = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    sc_pos_gse_y = models.FloatField( blank=True, null=True)
     
-    sc_pos_gse_z = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    sc_pos_gse_z = models.FloatField( blank=True, null=True)
     
-    sc_pos_gsm_x = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    sc_pos_gsm_x = models.FloatField( blank=True, null=True)
     
-    sc_pos_gsm_y = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    sc_pos_gsm_y = models.FloatField( blank=True, null=True)
     
-    sc_pos_gsm_z = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    sc_pos_gsm_z = models.FloatField( blank=True, null=True)
     
-    sc_vel_gse_vx = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    sc_vel_gse_vx = models.FloatField( blank=True, null=True)
     
-    sc_vel_gse_vy = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    sc_vel_gse_vy = models.FloatField( blank=True, null=True)
     
-    sc_vel_gse_vz = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    sc_vel_gse_vz = models.FloatField( blank=True, null=True)
     
-    scss_sep_gse_delta_x = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    scss_sep_gse_delta_x = models.FloatField( blank=True, null=True)
     
-    scss_sep_gse_delta_y = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    scss_sep_gse_delta_y = models.FloatField( blank=True, null=True)
     
-    scss_sep_gse_delta_z = models.DecimalField(max_digits=13,decimal_places=6, blank=True, null=True)
+    scss_sep_gse_delta_z = models.FloatField( blank=True, null=True)
     
     sf_sc_sep = models.PositiveSmallIntegerField( blank=True, null=True)
-    
-    cartesian = models.TextField( blank=True, null=True)
-    
-    label_pos_gse = models.TextField( blank=True, null=True)
-    
-    label_pos_gsm = models.TextField( blank=True, null=True)
-    
-    label_vel_gse = models.TextField( blank=True, null=True)
-    
-    label_sep_gse = models.TextField( blank=True, null=True)
     
     sf_sc_orbit = models.PositiveSmallIntegerField( blank=True, null=True)
     
