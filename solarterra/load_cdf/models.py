@@ -138,10 +138,10 @@ class Dataset(models.Model):
     def get_description(self):
         # Try text_description first, then logical_description, then build from components
         # might be better to use logical first
-        if self.text_description:
-            return self.text_description
-        elif self.logical_description:
+        if self.logical_description:
             return self.logical_description
+        elif self.text_description:
+            return self.text_description
         else:
             # Fallback to dataset_tag or build from components
             return self.tag
@@ -216,8 +216,7 @@ class Variable(models.Model):
     # -------MFLBL fields--------
 
     # original cdf datatype, before conversion to Django
-    # TYPE_CONVERSION table is currently in utils.py
-    # TODO: should be taken from cdaweb manual
+
     datatype = models.CharField(max_length=200, blank=True, null=True)
 
     dims = models.SmallIntegerField(blank=True, null=True)
@@ -260,14 +259,41 @@ class Variable(models.Model):
 
     def is_data(self):
         return var_logic_type.lower() == 'data'
-    
+
     def is_decimal(self):
         type_instance = DataType.objects.get(cdf_file_label=self.datatype)
         return type_instance.django_field == 'DecimalField'
 
     def get_precision(self):
         type_instance = DataType.objects.get(cdf_file_label=self.datatype)
-        return type_instance.decimal_places , type_instance.max_digits
+        return type_instance.decimal_places, type_instance.max_digits
+
+    def get_description(self):
+        if self.catdesc:
+            return self.catdesc
+        elif self.var_notes:
+            return self.var_notes
+
+    def get_axis_label(self):
+
+        units = self.get_attribute_value('units')
+        if units:
+            return f"{self.name}, {units}"
+        else:
+            return self.name
+
+    def get_attribute_value(self, attribute_title, get_type=False):
+        attr = self.attributes.filter(title__iexact=attribute_title).first()
+        if attr:
+            if get_type:
+                return attr.get_value(), attr.data_type
+            else:
+                return attr.get_value()
+        else:
+            return None
+
+    def is_log(self):
+        return self.scaletyp == "log"
 
 
 class VariableAttribute(models.Model):
@@ -342,7 +368,7 @@ class DynamicModel(models.Model):
             return model_class
         except:
             return None
-    
+
     def objects_count(self):
         mm = self.resolve_class()
         return mm.objects.count()
@@ -395,9 +421,9 @@ class DynamicField(models.Model):
         return self.field_name
 
     def get_time_field(self):
-        time_var = self.variable_instance.dependency_vars().filter(
+        time_var = self.variable_instance.dataset.variables.filter(
             name__icontains='epoch').first()
-        if time_var is not None:
+        if time_var is not None and self.variable_instance.depend_0.lower() == 'epoch':
             return time_var.dynamic.first()
         else:
             return None

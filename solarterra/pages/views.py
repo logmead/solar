@@ -34,7 +34,7 @@ def system_data(request):
 def data_info(request):
     template = "pages/data_official.html"
     context = {
-            'models' : DynamicModel.objects.all()
+        'models': DynamicModel.objects.all()
     }
     """
     dynamic_models = DynamicModel.objects.order_by(
@@ -45,7 +45,7 @@ def data_info(request):
 
         # check loading script for wi_ho consistency with times
 
-        # multidim = var.get_attribute_value('depend_1')
+        # multidim = var.get_attribute_value('depend_1') # is it here it breaks??
 
         vars = dm.dataset_instance.variables.filter(var_logic_type='data')
 
@@ -75,7 +75,7 @@ def technical_data(request, dataset_id):
         raise Http404
 
     vars = Variable.objects.filter(dataset=dts).order_by(
-         "name")
+        "name")
 
     context = {
         'dataset': dts,

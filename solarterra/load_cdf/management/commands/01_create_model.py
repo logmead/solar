@@ -29,7 +29,7 @@ def get_field_values(variable, postfix=None):
 # REMOVE THIS FOR THE GENERAL CASE
 def parse_dim_values(dim_values_str):
     raw_values = dim_values_str.strip('[]').split()
-    return [item.replace('.-', '_') for item in map(lambda x: x.strip('\''), raw_values) if item != '']
+    return [item.replace('.-', '_') for item in map(lambda x: x.strip('\''), raw_values) if item != ''] #TODO: i am not sure replace works with several symbols like that
 
 def parse_explosion(label):
     parts = label.lower().strip('[]').split(',')
@@ -81,7 +81,7 @@ class Command(BaseCommand):
 
         for variable in variables:
             if variable.dim_sizes is not None and variable.dim_sizes > 0:
-                # create dim_sizes model fields instead of one
+                # create several dim_sizes model fields instead of one
                 for index, field_postfix in enumerate(parse_explosion(variable.lablaxis)):
                     field = get_field_values(variable, field_postfix)
                     m['fields'].append(field)

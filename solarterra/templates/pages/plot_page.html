@@ -39,7 +39,7 @@
 
         <div>
             <div><b>Переменная</b>: &ensp; {{ item.instance.get_description }}</div>
-            <div><b>Набор данных</b>: &ensp; {{ item.instance.experiment.get_description }}</div>
+            <div><b>Набор данных</b>: &ensp; {{ item.instance.dataset.get_description }}</div>
         </div>
         
         {% with plot=item.plot %}

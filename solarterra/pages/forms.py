@@ -81,11 +81,11 @@ class VariablesForm(forms.Form):
                     }
                     total_quantity = obj.filter(**kwargs).count()
 
-                    dataset_vars = dts.variables.filter(is_data=True)
+                    dataset_vars = dts.variables.filter(var_logic_type="data")
                     var_fields = []
                     for dataset_var in dataset_vars:
 
-                        if dataset_var.has_depends():
+                        if dataset_var.depend_0 is not None:
                             time_field_name = dataset_var.dynamic.first().get_time_field_name()
 
                             field_name = dataset_var.dynamic.first()
@@ -106,7 +106,7 @@ class VariablesForm(forms.Form):
             else:
                 print("partial_render")
                 for dts in dataset_instances:
-                    dataset_vars = dts.variables.filter(is_data=True)
+                    dataset_vars = dts.variables.filter(var_logic_type="data")
                     var_fields = [(dataset_var.id, dataset_var.get_description())
                                   for dataset_var in dataset_vars]
                     var_choices.append((dts.get_description(), var_fields))

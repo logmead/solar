@@ -379,8 +379,16 @@ class Command(BaseCommand):
             - in cdf file, fing variable from depend 1 and save 
             its value into the dim_values of the current variable
             """
+
+            """
+            notion abt depend_x attributes:
+            so, variable have a match-file attributes: 
+            MFLBL_DIMS и MFLBL_DIM_SIZES: first it 0 for scalars, then 1 for 1d arrays etc; second is a list of sizes for each dimention
+            the initial CDF variable has a must-have field DEPEND_x, which points to another variable in the CDF file
+            TODO: j: i am not completely sure if it's always present/correctly filled; 
+            """
             explosion = var_instance.attributes.filter(
-                title__icontains='depend_1')
+                title__icontains='depend_1') #TODO: it's not only depend_1: it currently supports only one dimention
             if explosion.count() > 0:
                 depend_var = explosion.first().get_value()
                 var_instance.dim_values = str(cdf_obj[depend_var][...])
@@ -391,7 +399,7 @@ class Command(BaseCommand):
             except Exception as e:
                 print(dataset, var_instance.name, e)
 
-        # get variables that do not have var_logic_type set
+        # get variables that do not have matchfile var_logic_type set
         # and set it manually from the VAR_TYPE attribute
         set_var_type = var_qs.filter(var_logic_type__isnull=True)
 
@@ -400,13 +408,9 @@ class Command(BaseCommand):
                 title='VAR_TYPE').get_value()
             var.save()
 
-        # - create instances of dataset attribute and data attribute values, look at json at the same time
-
         # upload.result_status = 1  # Success code
         # upload.save()
         # make_log_entry(
         #     "SUCCESS", f"Upload {zip_filename} processed successfully with dataset {dataset_tag}. YAY.", upload=upload)
         # make_log_entry(
         #     "EXIT", f"test of new upload model ok!!!")
-
-        # GUTTING CDF FILES for metadata extraction (not everything is stored in match file)
