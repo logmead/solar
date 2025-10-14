@@ -12,7 +12,7 @@ class SourceForm(forms.Form):
     sources = forms.MultipleChoiceField(
         label="Загруженные наборы данных",
         choices=Dataset.objects.form_choices(),
-        widget=forms.CheckboxSelectMultiple()
+        widget=forms.CheckboxSelectMultiple(),
         required=True,
     )
 
