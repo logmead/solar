@@ -1,0 +1,124 @@
+
+
+<div hidden id="{{ widget.attrs.id }}-parts">
+	<div id="{{ widget.attrs.id }}-hour-template" class="dtw-js-hours dtw-time-option " onclick="dtw_chooseTimeOption(this);" data-target="{{widget.attrs.id}}"></div>
+	<div id="{{ widget.attrs.id }}-minute-template" class="dtw-js-minutes dtw-time-option" onclick="dtw_chooseTimeOption(this);" data-target="{{widget.attrs.id}}"></div>
+	<div id="{{ widget.attrs.id }}-second-template" class="dtw-js-seconds dtw-time-option" onclick="dtw_chooseTimeOption(this);" data-target="{{widget.attrs.id}}"></div>
+
+  <!-- choose months container - one item in row; data-sub attribute is required for rerender-->
+  <div id="{{ widget.attrs.id }}-month-choice-template" class="dtw-cal-month-choice" data-sub="" onclick="dtw_launchRerender(this, true, false);" data-prefix="{{widget.attrs.id}}"></div>
+  <!-- choose months container - one row-->
+  <div id="{{ widget.attrs.id }}-months-choice-template" class="dtw-cal-months-choice"></div>
+
+  <!-- choose years container - one item in row; data-sub attribute is required for rerender-->
+  <div id="{{ widget.attrs.id }}-year-choice-template" class="dtw-cal-year-choice" data-sub="" onclick="dtw_launchRerender(this, false, true);" data-prefix="{{widget.attrs.id}}"></div>
+  <!-- choose years container - one row-->
+  <div id="{{ widget.attrs.id }}-years-choice-template" class="dtw-cal-years-choice"></div>
+
+  <!-- actual calendar parts -->
+  <div id="{{ widget.attrs.id }}-cal-weekday-template" class="dtw-cal-weekday"></div>
+  <div id="{{ widget.attrs.id }}-cal-week-container-template" class="dtw-cal-week-container"></div>
+  <!--in data-sub should be string 2025-12-24 -->
+  <div id="{{ widget.attrs.id }}-cal-day-template" data-sub="" data-target="{{widget.attrs.id}}" class="dtw-cal-day" onclick="dtw_chooseDateOption(this);" data-prefix="{{widget.attrs.id}}"></div>
+
+</div>
+
+
+<div class="dtw-datetime-container" id="{{ widget.attrs.id }}-datetime-container">
+    <div class="dtw-visible-container">
+        <div class="dtw-input-container"  onclick="show('{{ widget.attrs.id }}-dropdown-container');">
+            <input readonly name="{{ widget.name }}" id="{{ widget.attrs.id }}" class="dtw-input-field" type="text" placeholder="yyyy-mm-dd hh:mm:ss" 
+			data-days="" data-months="" data-year=""
+			data-hours="00" data-minutes="00" data-seconds="00" {% if widget.value %}data-sub="{{ widget.value }}" data-prefix="{{ widget.attrs.id }}"{% endif %}>
+        </div>
+        <div id="{{ widget.attrs.id }}-choose-datetime" class="dtw-choose-time" onclick="show('{{ widget.attrs.id }}-dropdown-container');">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b4b4b4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        </div>
+        <div id="{{ widget.attrs.id }}-clear-datetime" class="dtw-choose-time" onclick="dtw_clearInput(this, '{{ widget.attrs.id }}');" hidden>
+          <svg class="clock-button" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b4b4b4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+        </div>
+    </div>
+    <div id="{{ widget.attrs.id }}-dropdown-container" class="dtw-dropdown-container" hidden>
+		<div class="dtw-flex-container">
+			<div id="{{ widget.attrs.id }}-calendar-container" class="dtw-calendar-container">
+
+        <div class="dtw-cal-header">
+            <div><i id="{{ widget.attrs.id }}-prev-month-label" data-sub="" onclick="dtw_launchRerender(this);" data-prefix="{{widget.attrs.id}}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" stroke="black" stroke-width="1.5" />
+              </svg>
+            </i></div>
+            
+            <div>
+                <span id="{{ widget.attrs.id }}-current-month-label" onclick="pairVisibility(this);" data-first="{{ widget.attrs.id }}-cal-months-container" data-second="{{ widget.attrs.id }}-actual-calendar" data-third="{{ widget.attrs.id }}-cal-years-container"></span>&nbsp;
+                <span id="{{ widget.attrs.id }}-current-year-label" onclick="pairVisibility(this);" data-first="{{ widget.attrs.id }}-cal-years-container" data-second="{{ widget.attrs.id }}-actual-calendar" data-third="{{ widget.attrs.id }}-cal-months-container"></span>
+            </div>
+            <div><i id="{{ widget.attrs.id }}-next-month-label" data-sub="" onclick="dtw_launchRerender(this);" data-prefix="{{widget.attrs.id}}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708" stroke="black" stroke-width="1.5" />
+                </svg>
+            </i></div>
+        </div>
+
+        <div id="{{ widget.attrs.id }}-cal-months-container" class="dtw-cal-months-container" hidden></div>
+
+        <div id="{{ widget.attrs.id }}-cal-years-container" class="dtw-cal-years-container" hidden></div>
+
+        <div id="{{ widget.attrs.id }}-actual-calendar" class="dtw-actual-calendar">
+          <div id="{{ widget.attrs.id }}-cal-weekdays" class="dtw-cal-weekdays"></div>
+          <div id="{{ widget.attrs.id }}-cal-days-container" class="dtw-cal-days-container"></div>
+        </div>
+
+      </div>
+			<div id="{{ widget.attrs.id }}-time-container" class="dtw-time-container">
+			
+			<div class="dtw-time-scrolls-container">
+				<div id="{{ widget.attrs.id }}-hours-scroll" class="dtw-scroll"></div>
+				<div id="{{ widget.attrs.id }}-minutes-scroll" class="dtw-scroll"></div>
+				<div id="{{ widget.attrs.id }}-seconds-scroll" class="dtw-scroll"></div>
+        	</div> 
+			
+			
+			</div>
+		</div>
+
+        
+        <div class="dtw-confirm-container">
+            
+            <div id="{{ widget.attrs.id }}-confirm-button" class="dtw-confirm-button dtw-cb-inactive" onclick="hide('{{ widget.attrs.id }}-dropdown-container');">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
+              </svg>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+  
+
+	document.addEventListener("DOMContentLoaded", function() {
+		dtw_initTimeContainer('{{ widget.attrs.id }}');
+    dtw_initCalendarContainer('{{ widget.attrs.id }}');
+    dtw_initInput('{{widget.attrs.id}}');
+	});
+
+  document.addEventListener("click", (event) => { 
+    let full_element = document.getElementById("{{ widget.attrs.id }}-datetime-container");
+    let dropdown_container = document.getElementById("{{ widget.attrs.id }}-dropdown-container");
+
+
+    if ( !dropdown_container.hidden ) { 
+      // if it is not a part of the element
+      if (!full_element.contains(event.target) && document.body.contains(event.target)) {
+        console.log("hiding the dropdown!");
+        dropdown_container.hidden = true;
+      }
+
+    }
+  });
+
+
+</script>

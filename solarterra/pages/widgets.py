@@ -1,6 +1,17 @@
 from django import forms
 from django.forms import Widget
 
+class DateTimeWidget(forms.DateTimeInput):
+
+    template_name = "widgets/datetime_widget.html"
+
+    class Media:
+        css = {
+            "all" : ["datetime.css"]
+        }
+        js = [ "datetime.js" ]
+
+
 
 class DateTimePicker(forms.DateTimeInput):
 

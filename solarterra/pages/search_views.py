@@ -14,12 +14,23 @@ def search(request):
     template = "pages/forms/source_form.html"
     context = {}
 
-    dyn = DynamicModel.objects.first()
-    ts_start, ts_end = dyn.get_time_limits()
-    print(ts_start)
+    if request.method == 'POST':
+        print(request.POST)
+        source_form = SourceForm(data=request.POST)
+        if source_form.is_valid():
+            print("valid!")
+            context['form'] = source_form
+            context['success'] = True
 
-    context['form'] = SourceForm(
-        initial={'ts_start': ts_start, 'ts_end': ts_end})
+        else:
+            print("invalid!")
+            context['form'] = source_form
+            context['success'] = False
+    else:
+        dyn = DynamicModel.objects.first()
+        ts_start, ts_end = dyn.get_time_limits()
+        context['form'] = SourceForm(
+            initial={'ts_start': ts_start, 'ts_end': ts_end})
 
     return render(request, template, context)
 
@@ -37,6 +48,7 @@ def variables(request):
         print(request.POST)
         source_form = SourceForm(data=request.POST)
         if source_form.is_valid():
+            print("request is valid!!")
             sources = source_form.cleaned_data['sources']
             ts_start_dt = source_form.cleaned_data['ts_start']
             ts_end_dt = source_form.cleaned_data['ts_end']
@@ -51,6 +63,8 @@ def variables(request):
                 initial={'ts_start': ts_start_dt, 'ts_end': ts_end_dt}
             )
             return render(request, template, context)
+        else:
+            print("variables form invalid!")
 
     raise Http404
 

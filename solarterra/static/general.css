@@ -170,3 +170,8 @@ a .psd-btn:hover {
 .tech-table td {
     border: 2px solid black;
 }
+
+
+.errorlist {
+	color: red;
+}

@@ -23,23 +23,34 @@
     
     <div id="other-forms">
         
-            <form id="search-form" method="post" data-url="{% url 'variables' %}">
-                <div class="split-form">
+            <form id="search-form" method="post" action="{% url 'search' %}">
+               	{{ form.media }}
+		    <div class="split-form">
                     <div>
                         <div class="field-label">Временной интервал</div>
                         <div>
                             <div>{{ form.ts_start.label }}</div>
                             <div>{{ form.ts_start }}</div>
+			    <div>
+		    		{{ form.errors.ts_start }}
+				</div> 
                         </div>
                         <div>
                             <div>{{ form.ts_end.label }}</div>
                             <div>{{ form.ts_end }}</div>
+				<div>
+		    		{{ form.errors.ts_end }}
+				</div> 
                         </div>
+		   	 <div>{{ form.non_field_errors }}</div>
                     </div>
                     <div>
                         <div  class="field-label">{{ form.sources.label }}</div>
                         <div>{{ form.sources }}</div>
-                        
+			<div>
+		    		{{ form.errors.sources }}
+			</div> 
+
                     </div>
                 </div>
                 {% csrf_token %}
@@ -48,14 +59,16 @@
                 
                 
         
-                <button class="btn" type="button" onclick="getVariables();">Показать переменные</button>
+                <button class="btn" type="submit" >Показать переменные</button>
             </form>
+	{% if success %}        
         
-        
-        
-        <div id="variables-place">
-        
-        </div>
+        <div id="variables-place" hx-trigger="load"  hx-post="{% url 'variables' %}" hx-include="#search-form" hx-swap="outerHTML">
+	    <img src="{% static 'loading_icon.gif' %}"> 
+
+	</div>
+
+	{% endif %}
     </div>
 
 
