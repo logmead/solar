@@ -18,4 +18,4 @@ class Command(BaseCommand):
     def add_arguments(self, parser: CommandParser):
 
         # q: how can i pass a result of a python script to bash script it was launched from
-        # a:
+        # a

@@ -544,3 +544,9 @@
 20:56:39 22.09.2025    [OK]  All CDF files stored successfully in /spool/data/WIND/WI/OR/PRE/v01
 20:56:39 22.09.2025    [OK]  Match file WIND_WI_OR_PRE_v01_matchfile.json loaded successfully
 20:56:39 22.09.2025    [OK]  Dataset WIND_WI_OR_PRE_v01 updated with global attributes from match file
+15:39:51 20.11.2025    [START]  Deletion script launched with parameter "ACE_AC_H0_SWE_v01"
+15:39:51 20.11.2025    [FOUND]  Data Type "ACE_AC_H0_SWE_v01" is found in the database
+15:39:51 20.11.2025    [FOUND]  Model for the Data Type "ACE_AC_H0_SWE_v01" exists
+15:39:51 20.11.2025    [NOT FOUND]  Model file for the Data Type "ACE_AC_H0_SWE_v01" is not found
+15:39:51 20.11.2025    [DELETED]  Removed metadata for the Data Type "ACE_AC_H0_SWE_v01"
+15:39:51 20.11.2025    [EXIT]  Deletion script finished

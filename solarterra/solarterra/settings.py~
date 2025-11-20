@@ -48,7 +48,7 @@ LOG_FILE = os.path.abspath(os.path.join(
 COLLISIONS_LOGS = os.path.abspath(os.path.join(
     BASE_DIR, '..', 'solarterra_submodules/logs/collisions'))
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '10.25.107.101']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition

@@ -275,12 +275,13 @@ class Variable(models.Model):
             return self.var_notes
 
     def get_axis_label(self):
+        return f'{self.lablaxis}, {self.units}'
 
-        units = self.get_attribute_value('units')
-        if units:
-            return f"{self.name}, {units}"
-        else:
-            return self.name
+        # units = self.get_attribute_value('units')
+        # if units:
+        #     return f"{self.name}, {units}"
+        # else:
+        #     return self.name
 
     def get_attribute_value(self, attribute_title, get_type=False):
         attr = self.attributes.filter(title__iexact=attribute_title).first()
@@ -301,8 +302,6 @@ class VariableAttribute(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     title = models.CharField(max_length=100)
-    # can it be determined from cdf_file?
-    # do i even use it?
     data_type = models.CharField(max_length=100, blank=True, null=True)
 
     variable = models.ForeignKey(
