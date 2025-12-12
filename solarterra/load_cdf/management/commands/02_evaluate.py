@@ -1,10 +1,15 @@
 from django.core.management.base import BaseCommand, CommandError, CommandParser
-from load_cdf.models import Upload, CDFFileStored, Dataset, make_log_entry
+# from load_cdf.models import dataset, datasetAttribute, datasetAttributeValue,\
+# Variable, VariableAttribute, VariableAttributeValue
+from load_cdf.models import Upload, CDFFileStored, Dataset, DatasetAttribute, DatasetAttributeValue, \
+    Variable, VariableAttribute, VariableAttributeValue, make_log_entry
 import datetime as dt
+from spacepy import pycdf
 import os
 import tempfile
 import shutil
 import zipfile
+import random
 import subprocess
 import json
 from solarterra.utils import normalize_str
@@ -14,6 +19,34 @@ from django.conf import settings
 DATA_ROOT = "/spool/data"
 MATCH_FILE_DIR = "/spool/match_files"
 UPLOAD_ZIP_DIR = "/spool/uploads_zipped"
+
+
+def get_var_field(mf_str):
+    if mf_str.startswith('MF_'):
+        return mf_str[3:].lower()
+    elif mf_str.startswith('MFLBL_'):
+        return mf_str[6:].lower()
+    else:
+        print(f"JSON: VAR ATTRIBUTE NAME is weird {mf_str}")
+
+
+class MetaAggregator():
+    def __init__(self, upload, dataset):
+        # TODO: maybe i want utag and dtag instead of instances?
+        self.upload = upload
+        self.dataset = self.upload.dataset
+
+        self.dset_attrs = []
+
+        self.dset_attr_values = []
+
+        self.vars = []
+
+        self.var_attrs = []
+
+        self.var_attr_values = []
+
+        # self.nrv_data = []
 
 
 class Command(BaseCommand):
@@ -93,7 +126,7 @@ class Command(BaseCommand):
         dataset = Dataset.objects.get_or_none(tag=dataset_tag)
         if dataset is None:
             # Create a new dataset if it doesn't exist
-            dataset = Dataset(tag=dataset_tag)
+            dataset = Dataset(tag=dataset_tag, directory=str(dataset_dir))
             dataset.save()
             make_log_entry(
                 "CREATED", f"Dataset instance created for {dataset_tag}",
@@ -150,26 +183,27 @@ class Command(BaseCommand):
                         upload=upload)
                     exit(2)
 
-                # No collisions, move files to dataset directory and create CDFFileStored instances
-                make_log_entry(
-                    "OK", f"No collisions found for dataset {dataset_tag}, proceeding to storing files", upload=upload)
-                upload.file_count = len(cdf_files)
-                upload.save()
+            # No collisions, move files to dataset directory and create CDFFileStored instances
+            make_log_entry(
+                "OK", f"No collisions found for dataset {dataset_tag}, proceeding to storing files", upload=upload)
+            upload.file_count = len(cdf_files)
+            upload.save()
 
-                for cdf_file in cdf_files:
-                    target_path = os.path.join(dataset_dir, cdf_file)
+            for cdf_file in cdf_files:
+                # TODO: remake it into a bulk save
+                target_path = os.path.join(dataset_dir, cdf_file)
 
-                    # Copy the file to the target directory
-                    shutil.copy2(os.path.join(temp_dir, cdf_file), target_path)
+                # Copy the file to the target directory
+                shutil.copy2(os.path.join(temp_dir, cdf_file), target_path)
 
-                    # Create CDFFileStored instance for the file
-                    cdf_stored = CDFFileStored(
-                        full_path=target_path,
-                        upload=upload
-                    )
-                    cdf_stored.save()
-                make_log_entry(
-                    'OK', f"All CDF files stored successfully in {dataset_dir}", upload=upload)
+                # Create CDFFileStored instance for the file
+                cdf_stored = CDFFileStored(
+                    full_path=target_path,
+                    upload=upload
+                )
+                cdf_stored.save()
+            make_log_entry(
+                'OK', f"All CDF files stored successfully in {dataset_dir}", upload=upload)
 
         # open json and save to Dataset all info from GlobalAttributes
 
@@ -185,23 +219,17 @@ class Command(BaseCommand):
 
             # Mapping from JSON keys to Dataset model fields (TEXT_DESCRIPTION is missing as it requires special handling)
             # tbh maybe a list and lowercase would be better
-            dataset_field_mapping = {
-                'MISSION': 'mission',
-                'SOURCE_NAME': 'source_name',
-                'DATA_TYPE': 'data_type',
-                'INSTRUMENT': 'instrument',
-                'DATASET_VERSION': 'dataset_version',
-                'LOGICAL_SOURCE': 'logical_source',
-                'LOGICAL_DESCRIPTION': 'logical_description',
-                'PI_NAME': 'pi_name',
-                'PI_AFFILIATION': 'pi_affiliation'
-            }
+            dataset_fields = [
+                'MISSION', 'SOURCE_NAME', 'DATA_TYPE',
+                'INSTRUMENT', 'DATASET_VERSION', 'LOGICAL_SOURCE',
+                'LOGICAL_DESCRIPTION', 'PI_NAME', 'PI_AFFILIATION'
+            ]
 
             # Automatically populate dataset fields from JSON
-            for json_key, model_field in dataset_field_mapping.items():
-                if json_key in global_attrs:
-                    value = global_attrs[json_key]['value']
-                    setattr(dataset, model_field, value)
+            for field in dataset_fields:
+                if field in global_attrs:
+                    value = global_attrs[field]['value']
+                    setattr(dataset, field.lower(), value)
 
             # Handle text_description separately since it's a list in JSON
             if 'TEXT_DESCRIPTION' in global_attrs:
@@ -241,11 +269,148 @@ class Command(BaseCommand):
                 "EXIT", f"Exiting due to error processing match file", upload=upload)
             exit(3)
 
-        upload.result_status = 0  # Success code
-        upload.save()
-        make_log_entry(
-            "SUCCESS", f"Upload {zip_filename} processed successfully with dataset {dataset_tag}. YAY.", upload=upload)
-        make_log_entry(
-            "EXIT", f"test of new upload model ok!!!")
+        # -------UNTESTED BELOW THIS LINE-------#
+        mama = MetaAggregator(upload, dataset)
 
-        exit(0)
+        # Create reverse mappings for easy lookup
+        namemap_dtsattr_reversed = {}
+        for attr_name, vals in match_data['GlobalAttributes'].items():
+            if "gattribute_name" in match_data['GlobalAttributes'][attr_name]:
+                namemap_dtsattr_reversed[vals["gattribute_name"]] = attr_name
+
+        namemap_vars_reversed = {}
+        for var_name in match_data['Variables']:
+            for varattr_name, vals in match_data['Variables'][var_name].items():
+                if 'vattribute_name' in vals:
+                    namemap_vars_reversed[vals['vattribute_name']] = var_name
+
+        # dataset attribute creation
+        # - choose cdf_file instance, open it
+        cdf_obj = pycdf.CDF(cdf_stored.full_path)
+
+        for xkey, xvalue in cdf_obj.attrs.items():
+            da_instance = DatasetAttribute(
+                title=xkey,
+                dataset=dataset,
+                linked_standard_field=namemap_dtsattr_reversed.get(xkey, None),
+            )
+            dav_instance = DatasetAttributeValue(
+                value=xvalue,
+                attribute=da_instance
+            )
+            mama.dset_attrs.append(da_instance)
+            mama.dset_attr_values.append(dav_instance)
+
+        DatasetAttribute.objects.bulk_create(mama.dset_attrs)
+        DatasetAttributeValue.objects.bulk_create(mama.dset_attr_values)
+
+        # get varibales from the CDF
+        for var in cdf_obj.keys():
+            var_instance = Variable(
+                name=var,
+                dataset=dataset
+            )
+            mama.vars.append(var_instance)
+
+            for attr_title, attr_value in cdf_obj[var].attrs.items():
+                var_attr_instance = VariableAttribute(
+                    title=attr_title,
+                    variable=var_instance
+                )
+                mama.var_attrs.append(var_attr_instance)
+
+                var_attr_value_instance = VariableAttributeValue(
+                    value=attr_value,
+                    attribute=var_attr_instance
+                )
+                mama.var_attr_values.append(var_attr_value_instance)
+
+        Variable.objects.bulk_create(mama.vars)
+        VariableAttribute.objects.bulk_create(mama.var_attrs)
+        VariableAttributeValue.objects.bulk_create(mama.var_attr_values)
+
+        # updating variable, varattrs using json
+        var_qs = Variable.objects.filter(dataset=dataset)
+
+        for var_name, var_dict in match_data['Variables'].items():
+            # find instance of this variable
+            try:
+                var_instance = var_qs.get(name=var_name)
+            except Exception as e:
+                print(
+                    f"SASHAAAAA {var_name} variable does not exist in the cdf file")
+                print(e)
+                continue
+
+            for json_var_attr, var_attr_dict in var_dict.items():
+                # find Variable instance field to save data to
+                var_field = get_var_field(json_var_attr)
+
+                if var_attr_dict['value'] is None:
+                    continue
+                # save data
+                try:
+                    print(var_instance.name, var_field, var_attr_dict['value'])
+                    setattr(var_instance, var_field,
+                            str(var_attr_dict['value']))
+
+                except Exception as e:
+                    print(
+                        f"OMG {var_instance}, {var_field}, {var_attr_dict['value']}, {type(var_attr_dict['value'])}, {e}")
+
+                # find the var attr instance
+                if var_attr_dict['vattribute_name'] is None:
+                    continue
+                try:
+                    var_attr_instance = var_instance.attributes.get(
+                        title=var_attr_dict['vattribute_name'])
+                except Exception as e:
+                    # print(
+                    #    f"SASHAAAAA var {var_name} {var_attr_dict['vattribute_name']} var_attr does not exist in the cdf file")
+                    # print(e)
+                    continue
+                var_attr_instance.linked_standard_field = var_field
+                var_attr_instance.multipart = var_attr_dict['value'] is list
+                var_attr_instance.save()
+
+            """
+            adding dimension values to explode later
+            - check if variable attributes contain depend 1
+            - in cdf file, fing variable from depend 1 and save 
+            its value into the dim_values of the current variable
+            """
+
+            """
+            notion abt depend_x attributes:
+            so, variable have a match-file attributes: 
+            MFLBL_DIMS и MFLBL_DIM_SIZES: first it 0 for scalars, then 1 for 1d arrays etc; second is a list of sizes for each dimention
+            the initial CDF variable has a must-have field DEPEND_x, which points to another variable in the CDF file
+            TODO: j: i am not completely sure if it's always present/correctly filled; 
+            """
+            explosion = var_instance.attributes.filter(
+                title__icontains='depend_1') #TODO: it's not only depend_1: it currently supports only one dimention
+            if explosion.count() > 0:
+                depend_var = explosion.first().get_value()
+                var_instance.dim_values = str(cdf_obj[depend_var][...])
+                print(
+                    f"{dataset} found explosion {var_instance} {depend_var} {var_instance.dim_values}")
+            try:
+                var_instance.save()
+            except Exception as e:
+                print(dataset, var_instance.name, e)
+
+        # get variables that do not have matchfile var_logic_type set
+        # and set it manually from the VAR_TYPE attribute
+        set_var_type = var_qs.filter(var_logic_type__isnull=True)
+
+        for var in set_var_type:
+            var.var_logic_type = var.attributes.get(
+                title='VAR_TYPE').get_value()
+            var.save()
+
+        # upload.result_status = 1  # Success code
+        # upload.save()
+        # make_log_entry(
+        #     "SUCCESS", f"Upload {zip_filename} processed successfully with dataset {dataset_tag}. YAY.", upload=upload)
+        # make_log_entry(
+        #     "EXIT", f"test of new upload model ok!!!")

@@ -1,4 +1,5 @@
 import datetime as dt
+import math
 
 MODEL_POSTFIX = "_data"
 
@@ -36,19 +37,35 @@ TYPE_CONVERSION = {
 def one_d_len(shape):
     return int(shape.strip('(),'))
 
+#obsolete since we have DataType class now
+# def get_django_type(some_type):
+#     if some_type in TYPE_CONVERSION.keys():
+#         result = TYPE_CONVERSION[some_type]
+#         return result[0], result[1] if len(result) > 1 else {}
+#     else:
+#         return None
 
 def get_django_type(some_type):
-    if some_type in TYPE_CONVERSION.keys():
-        result = TYPE_CONVERSION[some_type]
-        return result[0], result[1] if len(result) > 1 else {}
+    datatype_obj = DataType.objects.get_or_none(cdf_file_label = some_type)
+    if datatype_obj:
+        result = datatype_obj.django_field
+        return result
     else:
         return None
 
-
 def make_type(value, type_name):
+    #converts value to it's "true" type for python handling
+    #TODO: floats should probably be rounded to the output_format precision
     if 'int' in type_name:
         return int(value)
     elif 'datetime' in type_name:
         return dt.datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
     else:
         return value
+
+# # float errors handling
+# def convert_format_to_persicion(format_str):
+#     if format_str:
+#         after_point = int(format_str.split('.')[1])
+#         return 10**(-after_point)
+#     else: return None

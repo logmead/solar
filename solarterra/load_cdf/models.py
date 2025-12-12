@@ -261,12 +261,41 @@ class Variable(models.Model):
         return var_logic_type.lower() == 'data'
 
     def is_decimal(self):
-        type_instance = DataType.objects.get(cdf_file_label=self.datatype)
-        return type_instance.django_field == 'DecimalField'
+        if self.datatype:
+            type_instance = DataType.objects.get(cdf_file_label=self.datatype)
+            return type_instance.django_field == 'DecimalField'
+        else: return False
 
-    def get_precision(self):
+    def is_float(self):
+        if self.datatype:
+            type_instance = DataType.objects.get(cdf_file_label=self.datatype)
+            return type_instance.django_field == 'FloatField'
+        else: return False
+
+    def get_type_precision(self):
         type_instance = DataType.objects.get(cdf_file_label=self.datatype)
-        return type_instance.decimal_places, type_instance.max_digits
+        return type_instance.max_digits, type_instance.decimal_places
+
+    def get_format_precision(self,rel_tol_format = False):
+        '''
+        for F (fixed point notation) or E (scientific exponent) output is either in (maxlen,maxdigit) or as a value compatible 
+        with relative tolerance parameter in math.isclose function
+
+        for integers reltol is 0
+        '''
+        if self.output_format:
+            output_format = self.output_format.upper()
+            if 'F' in output_format or 'E' in output_format:
+                if rel_tol_format:
+                    after_point = int(output_format.split('.')[1])
+                    return 10**(-after_point)
+                else:
+                    return tuple(map(int,output_format.replace('F','').replace('E','').split('.')))
+            if 'I' in output_format:
+                if rel_tol_format:
+                    return 0
+                else: return int(output_format.replace('I','')), 0
+
 
     def get_description(self):
         if self.catdesc:
@@ -292,6 +321,11 @@ class Variable(models.Model):
                 return attr.get_value()
         else:
             return None
+    #unfunctional since data_type is not filled during Upload
+    def get_attribute_type(self, attribute_title):
+        attr = self.attributes.filter(title__iexact=attribute_title).first()
+        if attr:
+            return attr.data_type
 
     def is_log(self):
         return self.scaletyp == "log"
