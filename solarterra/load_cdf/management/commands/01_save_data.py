@@ -6,7 +6,7 @@ from data_cdf.models import *
 from spacepy import pycdf
 from solarterra.utils import ts_bigint_resolver
 from load_cdf.utils import make_type
-from decimal import Decimal, Context, getcontext, setcontext
+#from decimal import Decimal, Context, getcontext, setcontext
 from django.core.exceptions import  ValidationError
 import math
 
@@ -15,9 +15,11 @@ import math
 # construct value lists once per file, cause joins
 def value_arrays(dynamic_fields, cdf_object):
     arrays = {}
+    #fillval_dict = {}
     leng = 0
     for field in dynamic_fields:
         var = field.variable_instance
+        fillval = var.fillval
 
         # get part of values if varaible is multidimensional
         if field.exploded:
@@ -28,7 +30,8 @@ def value_arrays(dynamic_fields, cdf_object):
         if len(array) > leng:
             leng = len(array)
        
-        print(field.field_name, len(array))
+        print(field.field_name, len(array), f'fillval = {fillval}')
+        
 
         # if array of timestamps
         if var.datatype == 'CDF_EPOCH':
@@ -39,51 +42,53 @@ def value_arrays(dynamic_fields, cdf_object):
             
             #arrays[field.field_name] = list(map(lambda x: ts_bigint_resolver(x) if x > vin and x < vax else None, array))
             arrays[field.field_name] = list(map(lambda x: ts_bigint_resolver(x), array))
-        else: 
-            arrays[field.field_name] = array
+        
+
+        
             
         # if array of floats
-        """
+        
         elif var.is_decimal():
             print(f"var {var} is decimal")
             # print(f"NEW ARRAY {array.dtype}, {type(array)}")
             
-            places, digits = var.get_precision()
+            #places, digits_after_point = var.get_type_precision()
+            places,digits_after_point = var.get_format_precision()
             fill_val = var.fillval
 
             b = array.astype(str)
 
             b[b == fill_val] = math.nan
             str_nan = str(math.nan)
-            context = Context(prec=digits)
-            setcontext(context)
 
-            places = Decimal(str(10 ** -(places)))            
+            #context = Context(prec=digits_after_point_after_point)
+            #setcontext(context)
+
+            #places = Decimal(str(10 ** -(places)))
+                         
             ll = []
             for index, x in enumerate(b):
                 if x == str_nan:
                     ll.append(None)
                 else:
-                    #try:
-                    print(x, places, digits)
-                    item = Decimal(x).quantize(places, context=context)
-                    ll.append(item)
-                    #except Exception as e:
-                    #    ll.append(None)
-                    #    print("ERRROR IN FLOAT")
-                    #    print(index, f"|{x}|")
-                    #    print(e)
-                    #    exit()
+                    li.append(x) #❓ какого оно ща типа если ток-ток из cdf
+                    print(x, places, digits_after_point)
+
+                    #item = Decimal(x).quantize(places, context=context)
+                    #ll.append(item)
+                    
 
             arrays[field.field_name] = ll
-            #arrays[field.field_name] = list(map(lambda x: None if x == str_nan else Decimal(x).quantize(places, context=context), b))
-        """
+        
+        else: 
+            arrays[field.field_name] = array
             
         # any other array
             
-        #fill_val, fill_val_type = var.get_attribute_value("fillval", get_type=True)
-        #fill = make_type(fill_val, fill_val_type)
-        #arrays[field.field_name] = list(map(lambda x: None if x == fill else x, array))
+        fill_val, fill_val_type = var.fillval, var.get_attribute_type("FILLVAL")
+        print(var.name, fill_val, var.attributes.all())
+        fill = make_type(fill_val, fill_val_type)
+        arrays[field.field_name] = list(map(lambda x: None if x == fill else x, array))
         
     return leng, arrays
             
@@ -96,7 +101,7 @@ class Command(BaseCommand):
 
         dataset_tag = options["dataset_tag"][0]
         
-        # find experiment
+        # find dataset
         dataset_instance = Dataset.objects.get_or_none(tag=dataset_tag)
         if dataset_instance is None:
             print(f"{dataset_instance} dataset not found")
@@ -148,7 +153,7 @@ class Command(BaseCommand):
         dynamic_fields = dmi.fields.all()
         #make_log_entry("", "Starting data parsing...")
 
-        counter = 0
+        file_counter = 0
         
         for file_path in files_list:
             
@@ -160,9 +165,10 @@ class Command(BaseCommand):
             
 
             # get all value arrays in a dict with keys
-            leng, field_dict = value_arrays(dynamic_fields, cdf_object)
-            
+            leng, field_dict, fillval_dict = value_arrays(dynamic_fields, cdf_object)
+
             model_instances = []
+             
 
             # set data
             for index in range(leng):
@@ -170,9 +176,10 @@ class Command(BaseCommand):
                 instance = model_class()
                 setattr(instance, 'file_name', file_name)
 
-                for attr, vals in field_dict.items():
+                for fieldname, vals in field_dict.items():
                     if index < len(vals):
-                        setattr(instance, attr, vals[index])
+                        
+                        setattr(instance, fieldname, value)
 
                 model_instances.append(instance)
 
@@ -191,7 +198,7 @@ class Command(BaseCommand):
                 exit()
                 #make_log_entry("ERROR", f"Could not load data from {file_name}. Exception {e.__class__.__name__} occured.", addition=e)
             else:
-                counter += 1
+                file_counter += 1
 
             #make_log_entry("CREATED", f"Loaded {len(model_instances)} entries from {file_name}")
             
