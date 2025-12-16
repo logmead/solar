@@ -9,6 +9,7 @@ from load_cdf.utils import make_type
 #from decimal import Decimal, Context, getcontext, setcontext
 from django.core.exceptions import  ValidationError
 import math
+import numpy as np
 
 
 
@@ -31,11 +32,11 @@ def value_arrays(dynamic_fields, cdf_object):
             leng = len(array)
        
         print(field.field_name, len(array), f'fillval = {fillval}')
-        mrk = ''
+        
 
         # if array of timestamps
         if var.datatype == 'CDF_EPOCH':
-            mrk = 'if'
+            
             #val_min, val_min_type = var.get_attribute_value("validmin", get_type=True)
             #vin = make_type(val_min, val_min_type)
             #val_max, val_max_type = var.get_attribute_value("validmax", get_type=True)
@@ -47,13 +48,16 @@ def value_arrays(dynamic_fields, cdf_object):
         # if array of floats
         
         elif var.is_float():
-            mrk = 'elif'
+            
             print(f"var {var} is float")
             # print(f"NEW ARRAY {array.dtype}, {type(array)}")
             
             #places, digits_after_point = var.get_type_precision()
             places,digits_after_point = var.get_format_precision()
             fill_val = var.fillval #fillval is stored in str format ❓(in a list)❓
+
+            #TODO: while refactoring add fillval normalization to the e+ notation as a method/while uploading 
+            fillval = str(np.float32(fill_val))
 
             # ideally, if no fillval in matchfile, we should go get fillval from type... 
             # but it's easier to poke the person who is responsible for matches
@@ -88,7 +92,7 @@ def value_arrays(dynamic_fields, cdf_object):
             arrays[field.field_name] = ll
         
         else: 
-            mrk = 'else'
+             
             arrays[field.field_name] = array
         # any other array
             
@@ -96,9 +100,9 @@ def value_arrays(dynamic_fields, cdf_object):
             print(var.name, fill_val, var.attributes.all())
             fill = make_type(fill_val, fill_val_type)
             arrays[field.field_name] = list(map(lambda x: None if x == fill else x, array))
-    print(field.field_name, mrk, type(arrays[field.field_name][0]))
+    #print(field.field_name, type(arrays[field.field_name][0]))
 
-    print([(key, arrays[key][:10]) for key in arrays])
+    #print([(key, arrays[key][:10]) for key in arrays])
     return leng, arrays
             
 class Command(BaseCommand):
