@@ -386,6 +386,10 @@ class DynamicModel(models.Model):
 
     model_file_path = models.TextField()
 
+    objects_count = models.IntegerField(blank=True, null=True)
+    files_count = models.IntegerField(blank=True, null=True)
+
+
     objects = GetManager()
 
     def __str__(self):
@@ -402,13 +406,13 @@ class DynamicModel(models.Model):
         except:
             return None
 
-    def objects_count(self):
+    def set_objects_count(self):
         mm = self.resolve_class()
-        return mm.objects.count()
+        self.objects_count = mm.objects.count()
 
-    def files_count(self):
+    def set_files_count(self):
         mm = self.resolve_class()
-        return mm.objects.distinct('file_name').count()
+        self.files_count = mm.objects.distinct('file_name').count()
 
     def data_variables(self):
         return self.dataset_instance.variables.filter(var_logic_type='data')

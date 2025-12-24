@@ -220,6 +220,13 @@ class Command(BaseCommand):
             #if counter % 10 == 0:
             #    make_log_entry("CREATED", f"Loaded {counter} files...")
         
+        
+        #TODO actually one should take file count from the current upload and not redo all the calculations
+        # ESPECIALLY in a way these set_ functions do
+        dmi.set_files_count()
+        dmi.set_objects_count()
+
+
         #make_log_entry("CREATED", f"Loaded {counter} files out of {len(files_list)}.")
         #make_log_entry("EXIT", "Data loading script finished")
         
